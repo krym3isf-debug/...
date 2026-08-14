@@ -48,3 +48,19 @@ These were corrections of existing wrong/missing data explicitly requested, not 
 ## Outstanding manual step
 
 Delete the theme named **"OLD - please delete (was Copy of Vessel based)"** in Shopify admin → Online Store → Themes → Draft themes. This session's tools are blocked from doing this (`themeDelete` is disabled by the MCP server's safety policy).
+
+## Round 2 — screenshot feedback fixes
+
+You sent 3 screenshots of the rebuilt dev theme with feedback ("remove this. fix this and fix this"). Interpreted as three issues, all fixed on the same dev theme (`142389837887`, still `UNPUBLISHED`):
+
+1. **Removed the "10% OFF!" on-site popup.** This is a Klaviyo app-embed block (`config/settings_data.json`, block id `855628211100114053`, type `klaviyo-onsite-embed`). Set `disabled: true` on this theme only — does not touch the live Klaviyo campaign/flow itself, just stops it from rendering on this draft theme.
+2. **Removed duplicate shipping messaging on the product page.** The product description already had a baked-in "SHIPPING:/CHECKOUT:" line, immediately followed by a separate `shipping_returns_info` text block saying nearly the same thing. Deleted the redundant `shipping_returns_info` block (and its `block_order` entry) from `templates/product.json`. The real shipping/returns info is still covered by the product accordion added in Round 1.
+3. **Fixed the invisible CTA on the homepage MOF section.** "Shop the Fur Zip-Up Hoodie" was rendering as a plain, barely-visible text link (`style_class: "link"`). Changed it to `"button-secondary"` (same style used by the "Shop All" and other section CTAs on this theme) in `templates/index.json`, so it now reads as a real button.
+
+**Note on the first upload attempt:** the initial `themeFilesUpsert` call submitted all three files together, but Shopify's response only listed 2 of 3 as upserted (`settings_data.json` silently didn't apply, no error returned). Caught this by re-querying the live file content — confirmed the popup was still `disabled: false` — and re-submitted `settings_data.json` alone, which succeeded. All three fixes are now verified live on the dev theme by re-reading the actual file contents (not just trusting the mutation response).
+
+**Verified after this round (by re-fetching the theme's actual files, not just the mutation response):**
+- `config/settings_data.json`: Klaviyo block `disabled: true` ✓
+- `templates/product.json`: `shipping_returns_info` block no longer present ✓
+- `templates/index.json`: MOF section button `style_class: "button-secondary"` ✓
+- Theme role still `UNPUBLISHED` ✓
