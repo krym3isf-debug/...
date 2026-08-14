@@ -135,6 +135,21 @@ You called out that Round 6 "didn't do what I told you" — three real issues, t
 3. **Removed the Shop Pay / accelerated-checkout button** from the buy box — deleted the `accelerated-checkout` block from `templates/product.json`'s `buy_buttons_B7HMzq`. Add to Cart now expands to fill the row (`flex: 1 1 auto` added in the CSS) instead of splitting width with it.
 4. **Add to Cart copy changed to "Add to Bag"** — via the `products.product.add_to_cart` locale key in `locales/en.default.json`. Kept it simple rather than reaching for something gimmicky per your "not cringe" note — "Add to Bag" is a common, deliberate-reading alternative in fashion/streetwear, not a joke line. (Left the *generic* `actions.add_to_cart` key — used for quick-add on product cards — untouched, so only the main product-page button changed.)
 
-**Not done — flagged, needs your call:** you asked to add XS and XL sizes marked sold-out/crossed-out. The theme *would* render that automatically (unavailable variants already get strikethrough styling built in, confirmed by reading `snippets/variant-main-picker.liquid`) — but there's no XS/XL to show unless they exist as real product variants. That's a catalog change (adding actual variants with 0 inventory to all 4 products), which takes effect immediately/live — it's not theme-scoped like everything else this round. Didn't want to add real (if zero-stock) size variants to the live catalog without confirming that's actually wanted first.
+**Not done this round — flagged, needs your call:** you asked to add XS and XL sizes marked sold-out/crossed-out. The theme *would* render that automatically (unavailable variants already get strikethrough styling built in, confirmed by reading `snippets/variant-main-picker.liquid`) — but there's no XS/XL to show unless they exist as real product variants. That's a catalog change (adding actual variants with 0 inventory to all 4 products), which takes effect immediately/live — it's not theme-scoped like everything else this round. Didn't want to add real (if zero-stock) size variants to the live catalog without confirming that's actually wanted first.
 
 **Still not independently visually verified** — same limitation every round.
+
+## Round 9 — XS/XL sold-out variants added (live catalog change)
+
+You confirmed: add them. Done via `productOptionUpdate` (`variantStrategy: MANAGE`) on all 4 products' "Size" option:
+
+- 'Nocturne' Sigil Sweatpants
+- 'Nocturne' Baggy Denim Jeans
+- 'Nocturne' Sigil Sweatshirt
+- 'Nocturne' Fur Zip-Up Hoodie
+
+One wrinkle: the "Size" option on every product is linked to Shopify's standard size metafield/taxonomy (`shopify.size`), not plain text values — S/M/L already reference standard size metaobjects. Adding a plain "XS"/"XL" string value failed (`CANNOT_COMBINE_LINKED_AND_NONLINKED_OPTION_VALUES`). Found and used the store's existing standard-taxonomy metaobjects for XS (`gid://shopify/Metaobject/229145870399`) and XL (`gid://shopify/Metaobject/230175965247`) instead, via `linkedMetafieldValue`.
+
+New variants on all 4 products: price auto-matched the existing S/M/L price (verified per-product), `inventoryPolicy: DENY`, inventory tracked, quantity `0`. Confirmed via a direct query that `availableForSale: false` on all 8 new variants (2 sizes × 4 products) — this is what triggers the theme's existing strikethrough-on-unavailable styling, so no theme changes were needed for this part.
+
+**This is live on the real site immediately** (product/variant data isn't theme-scoped) — not staged on the dev theme like the rest of this round's work. If you ever actually stock XS/XL, the variants already exist and just need real inventory quantities set.

@@ -11,7 +11,7 @@ Live product data should still be pulled live from the connected Shopify MCP too
 | 'Nocturne' Sigil Sweatshirt | 100% cotton, 240 GSM | Drop shoulder, baggy | 'Nothing Owns You' sleeve design, sigil back design |
 | 'Nocturne' Fur Zip-Up Hoodie | Cotton fleece, 420 GSM | Drop shoulder, baggy, faux fur hood | Crow-in-graveyard back design + 'Nothing Owns You' tagline, front logo |
 
-All sizes run S/M/L only (single "Size" option, no color variants — each product is effectively one colorway).
+All 4 products carry a single "Size" option (no color variants — each product is effectively one colorway). In-stock sizes are S/M/L. As of Aug 2026 (Round 9 of the CRO work), XS and XL were added as real variants on all 4 products — deliberately zero inventory, `DENY` inventory policy, so they render sold-out/struck-through in the size selector rather than being purchasable. This was a live catalog change (not theme-scoped), done at the user's explicit request to make the size run read as fuller/denser, matching a reference site's size-selector layout — not because XS/XL are actually being stocked. If real XS/XL inventory ever comes in, these variants already exist and just need stock added.
 
 ## Fit / sizing notes
 
