@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git branch*)",
+      "Bash(git show*)",
+      "Bash(npm test*)",
+      "Bash(npm run*)",
+      "Bash(npm install)",
+      "Bash(npm install --save-dev*)",
+      "Bash(npx playwright*)",
+      "Bash(npx eslint*)",
+      "Bash(npx stylelint*)",
+      "Bash(npx prettier*)",
+      "Bash(npx shopify theme check*)",
+      "Bash(ls*)",
+      "Bash(cat*)",
+      "Bash(grep*)",
+      "Bash(find*)",
+      "Read",
+      "Glob",
+      "Grep"
+    ],
+    "ask": [
+      "Bash(shopify theme push --live*)",
+      "Bash(git push --force*)",
+      "Bash(git reset --hard*)"
+    ],
+    "deny": [
+      "Bash(rm -rf*)"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Environment secrets — real credentials never get committed
+.env
+.env.local
+.env.*.local
+
+# Shopify CLI
+.shopify/
+*.theme-check-cache
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
+blob-report/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Local Claude Code settings (machine-specific permission grants)
+.claude/settings.local.json

@@ -1,0 +1,25 @@
+{
+  "name": "possessionless",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Possessionless — Shopify storefront, marketing, and Claude Code working environment.",
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "lint:theme": "shopify theme check",
+    "lint:js": "eslint .",
+    "lint:css": "stylelint \"**/*.css\"",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1",
+    "@shopify/cli": "^4.6.1",
+    "@shopify/theme-check-node": "^3.28.1",
+    "@eslint/js": "^9.20.0",
+    "eslint": "^9.20.0",
+    "prettier": "^3.5.0",
+    "stylelint": "^16.14.0",
+    "stylelint-config-standard": "^37.0.0"
+  }
+}
