@@ -86,3 +86,22 @@ Round 3's footer fix (targeting `#shopify-section-footer` / `.shopify-section-fo
 2. **Rewrote the footer fix a third time**, this time anchored to a confirmed fact instead of a guess: `layout/theme.liquid` wraps the entire footer group in a plain `<footer>{% sections 'footer-group' %}</footer>` tag. Selectors on `#shopify-section-footer` / `.shopify-section-footer` were guesses at Shopify's internal section-group ID/class naming that evidently didn't match. The new CSS in `assets/possessionless-white-sections-fix.css` targets the `footer` element directly (background-color, CSS custom properties, and a `footer, footer *` color rule), which doesn't depend on knowing Shopify's generated wrapper naming at all.
 
 **Still not visually confirmed by me** — this session has no browser/DOM access, so every footer attempt so far has been "read the source, reason about what should render," which has now failed twice on this specific bug. Flagged this limitation directly rather than re-asserting confidence I don't have. Needs your visual check on the preview link before this is considered resolved.
+
+## Round 5 — site-wide decay/glitch pass
+
+Your direction: "clean it all up more, add a glitch effect to the whole site, make it like Saw type vibe that matches the logos... make it smoother... make it like withered hills site a bit but give it my vibe like saw." Couldn't view withered hills or the actual logo files (no browser access), so this was built from the brand facts already on record (Nocturne sigil line, "Nothing Owns You," ⟡ motif) plus the glitch/grain system already in the theme, pushed further.
+
+Rewrote `assets/possessionless-white-sections-fix.css` as one clean, numbered file (1. white-section fixes, 2. topbar, 3. footer, 4. decay/glitch pass) — same content as Round 4, reorganized with section headers instead of scattered comments.
+
+New in the decay/glitch pass:
+- Rust-tinted vignette (was flat black)
+- Rare vertical film-damage scratch flicker
+- Chromatic-aberration text glitch expanded from headings-only to nav links, prices, footer headings, accordion labels — staggered timing so it reads as scattered decay, not a synchronized blink
+- Glitch keyframes now end on an eased settle instead of a hard snap
+- Broken-corner clip-path extended from the hero CTA to all theme buttons, with eased hover transitions
+- One warning-stripe hairline accent (amber/black diagonal) above the New Release divider — deliberately restrained, not a full hazard-tape treatment
+- Product image hover easing smoothed out (longer, curved transitions instead of linear)
+
+Explicitly avoided: literal gore/blood, jump-scare visual language, anything that would clash with the brand's existing fashion-editorial positioning. Stayed in "damaged/rusted/decayed" territory rather than "horror movie prop."
+
+**Not visually verified** — same limitation as every round: no browser access in this session. This is a bigger, more visible change than prior rounds (touches buttons and text glitch site-wide), so it needs your eyes before going further. Also worth double-checking mobile — the glitch/scanline effects haven't been evaluated for mobile performance or whether `prefers-reduced-motion` is enough of an escape hatch.
