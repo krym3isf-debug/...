@@ -105,3 +105,14 @@ New in the decay/glitch pass:
 Explicitly avoided: literal gore/blood, jump-scare visual language, anything that would clash with the brand's existing fashion-editorial positioning. Stayed in "damaged/rusted/decayed" territory rather than "horror movie prop."
 
 **Not visually verified** — same limitation as every round: no browser access in this session. This is a bigger, more visible change than prior rounds (touches buttons and text glitch site-wide), so it needs your eyes before going further. Also worth double-checking mobile — the glitch/scanline effects haven't been evaluated for mobile performance or whether `prefers-reduced-motion` is enough of an escape hatch.
+
+## Round 6 — footer polish (confirmed working, three follow-up fixes)
+
+You confirmed the footer dark-charcoal fix from Round 5 is finally visually working. Three follow-ups from your screenshots:
+
+1. **Removed the warning-stripe hairline** above the New Release divider — you called it a "random ass line." Deleted the `.section-resource-list__header::before` block from `assets/possessionless-white-sections-fix.css` entirely; the original sigil scratch-line divider (`::after`) stays.
+2. **Removed the footer tagline** ("Possessionless was built for those who move through the dark...") — deleted the `tagline_text_pl001` block and its `block_order` entry from `sections/footer-group.json`. The brand blurb group now just holds the social icons.
+3. **Fixed the invisible email-signup arrow.** Root cause: the button's fill/stroke was relying on `currentColor` inheritance from the button's `color` property, which wasn't rendering visibly in practice (button background was a light gray `#e0e0e0`, similar in tone to whatever the icon was actually rendering as). Rebuilt it as a black circular button with the fill/stroke on the icon's `svg`/`path` set directly instead of depending on inheritance — matches the reference site's black-circle-white-arrow treatment.
+4. **Changed "Join the Movement" to "Stay in the Dark"** — on-brand with the Nocturne/night naming, drops the generic "join our newsletter" phrasing. Subtext line ("First access to new drops...") left as-is since you didn't flag it.
+
+**Still not independently visually verified by me** — same session limitation as every round. But this round is different: for the first time, you confirmed the underlying dark-footer fix visually worked, which is real signal the file-write → render pipeline is sound now. The three fixes above are reasoned the same way (source-level, not rendered) — flag anything still off.
