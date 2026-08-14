@@ -15,6 +15,9 @@ Do **not** read every file in this repo at the start of a task. Load only what t
 | Browser testing (Playwright) | `docs/playwright-testing.md` |
 | Tool routing / usage optimization notes | `docs/tooling.md` |
 | Subagents available | `.claude/agents/` |
+| Structured dev workflow (brainstorm/plan/TDD/debug/verify) | Superpowers plugin — skills auto-surface by name, see `docs/tooling.md` |
+| Professional UI/UX design intelligence (styles/palettes/fonts/charts) | UI/UX Pro Max plugin — auto-surfaces on design tasks, see `docs/tooling.md` |
+| Cutting AI-writing tells from prose | `stop-slop` skill (`.claude/skills/stop-slop/`) |
 
 Each knowledge file is small and single-purpose on purpose — load the one you need, not the whole directory.
 
