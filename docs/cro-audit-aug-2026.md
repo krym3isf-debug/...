@@ -64,3 +64,16 @@ You sent 3 screenshots of the rebuilt dev theme with feedback ("remove this. fix
 - `templates/product.json`: `shipping_returns_info` block no longer present ✓
 - `templates/index.json`: MOF section button `style_class: "button-secondary"` ✓
 - Theme role still `UNPUBLISHED` ✓
+
+## Round 3 — popup source correction + MOF removal + footer contrast fix
+
+After Round 2 you reported the popup was still showing on the preview. Investigated properly this time instead of re-touching the theme:
+
+**The "10% OFF!" popup is not a theme element.** It's a live Klaviyo Form ("SMS Popup", id `VKH9qv`, status `live`), which Klaviyo injects via its own on-site script account-wide — independent of which Shopify theme is published. That's why disabling the theme's `klaviyo-onsite-embed` app-embed block in Round 2 had no effect on it: that block was never what controlled it. Pausing it would be a live, site-wide marketing change (likely feeding an active SMS flow), not a dev-theme-scoped one, so I flagged it and asked before touching it. **You said leave it alone** — no Klaviyo changes made. Out of scope for this audit going forward.
+
+Two things you did want fixed, both done on the dev theme (`142389837887`, still `UNPUBLISHED`):
+
+1. **Removed the "closer look" MOF section entirely** from the homepage — you found it ugly, no partial fix, deleted the `mof_closer_look` section and its `order` entry from `templates/index.json`. Homepage now goes straight from hero to the "New Release" grid.
+2. **Fixed the illegible footer.** The footer section is set to the dark `scheme-2` (correct: dark bg, light text), but was rendering as pale/washed-out text on a near-white background — nearly unreadable. Root cause: an existing custom override in `assets/possessionless-white-sections-fix.css` (added during the earlier white-body pivot) tried to force the footer dark via ID selectors `#shopify-section-footer` / `#shopify-section-utilities` — but Shopify's `sections/footer-group.json` group renders sections with dynamic, non-predictable IDs, not plain `#shopify-section-{key}`. So that CSS block never matched anything and silently did nothing. Fixed by adding the *stable* selectors Shopify actually guarantees — `.shopify-section-footer` / `.shopify-section-footer-utilities`, generated from each section's `type` (confirmed by reading `sections/footer.liquid`'s own markup) — alongside the original ID selectors as a fallback, for both the background/color-variable overrides and the sigil-divider decoration lower in the same file.
+
+**Not yet visually confirmed** — Playwright/browser access is still blocked in this session, so the footer fix is based on reading the actual section markup and Shopify's documented ID/class generation convention, not a rendered screenshot. Worth a hard-refresh check on your end before calling it done.
