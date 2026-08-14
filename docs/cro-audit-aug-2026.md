@@ -127,3 +127,14 @@ You called out that Round 6 "didn't do what I told you" — three real issues, t
 4. **Cleaned up dead CSS.** The Round 5 glitch pass had guessed at two selectors (`.accordion__toggle`, `accordion-custom summary`) that don't match anything in the real DOM (confirmed while reading `blocks/menu.liquid`) — removed them rather than leaving dead rules in the file.
 
 **Still not independently visually verified** — same limitation every round. This round is different in kind, though: all three fixes are now grounded in the actual block/liquid source (read directly, not inferred), not another blind CSS guess.
+
+## Round 8 — hero cleanup, compact size selector, buy-box rebuild
+
+1. **Hero repositioned left, clip-path removed.** You flagged the bottom-right clip-path button as visually broken. Moved content to bottom-left (`blocks/ai_gen_block_af1492a.liquid`: `bottom:6%; left:5%; text-align:left`, plus a mobile equivalent) and dropped the clip-path entirely — back to a plain clean bordered rectangle, since the cut was the thing rendering wrong.
+2. **Size selector shrunk.** Added a scoped CSS override (`.product-information .variant-option__button-label`) to shrink the buttons from the default oversized style to a compact ~42px square.
+3. **Removed the Shop Pay / accelerated-checkout button** from the buy box — deleted the `accelerated-checkout` block from `templates/product.json`'s `buy_buttons_B7HMzq`. Add to Cart now expands to fill the row (`flex: 1 1 auto` added in the CSS) instead of splitting width with it.
+4. **Add to Cart copy changed to "Add to Bag"** — via the `products.product.add_to_cart` locale key in `locales/en.default.json`. Kept it simple rather than reaching for something gimmicky per your "not cringe" note — "Add to Bag" is a common, deliberate-reading alternative in fashion/streetwear, not a joke line. (Left the *generic* `actions.add_to_cart` key — used for quick-add on product cards — untouched, so only the main product-page button changed.)
+
+**Not done — flagged, needs your call:** you asked to add XS and XL sizes marked sold-out/crossed-out. The theme *would* render that automatically (unavailable variants already get strikethrough styling built in, confirmed by reading `snippets/variant-main-picker.liquid`) — but there's no XS/XL to show unless they exist as real product variants. That's a catalog change (adding actual variants with 0 inventory to all 4 products), which takes effect immediately/live — it's not theme-scoped like everything else this round. Didn't want to add real (if zero-stock) size variants to the live catalog without confirming that's actually wanted first.
+
+**Still not independently visually verified** — same limitation every round.
