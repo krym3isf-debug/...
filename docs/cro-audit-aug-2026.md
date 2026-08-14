@@ -1,12 +1,16 @@
 # Shopify CRO Audit & Implementation — August 2026
 
-Record of the conversion audit and first implementation pass on `possessionless.store`, done via the Shopify Admin API (Playwright couldn't reach the live site from that session's sandbox — network policy blocked all outbound browsing, confirmed on multiple hosts).
+Record of the conversion audit and implementation on `possessionless.store`, done via the Shopify Admin API (Playwright couldn't reach the live site from that session's sandbox — network policy blocked all outbound browsing, confirmed on multiple hosts).
 
-## Dev theme
+## Dev theme — rebased once (see below)
 
-- **`POSSESSIONLESS CRO TEST - AUG 2026`** (`gid://shopify/OnlineStoreTheme/142379483199`) — unpublished duplicate of the live theme ("Copy of Vessel", `gid://shopify/OnlineStoreTheme/142225670207`, role MAIN).
-- `Step 1 - Bar` (a separate unpublished theme, pre-existing) was left untouched per instruction.
-- Live theme was never modified. Dev theme role confirmed UNPUBLISHED after all changes.
+**Current dev theme:** `POSSESSIONLESS CRO TEST - AUG 2026` (`gid://shopify/OnlineStoreTheme/142389837887`) — unpublished duplicate of **`Step 1 - Bar`** (`gid://shopify/OnlineStoreTheme/142343536703`, itself left untouched).
+
+**History:** the CRO fixes were originally built on a duplicate of the live theme ("Copy of Vessel", `gid://shopify/OnlineStoreTheme/142225670207`, role MAIN), per an explicit instruction to leave `Step 1 - Bar` untouched and use the live theme as the base. The user later clarified they preferred `Step 1 - Bar`'s in-progress direction over the live site. That first dev theme (`gid://shopify/OnlineStoreTheme/142379483199`) was renamed to **"OLD - please delete (was Copy of Vessel based)"** and left unpublished — `themeDelete` is blocked by this environment's MCP safety policy (theme deletion could affect the live storefront), so it needs to be deleted manually in Shopify admin. All CRO fixes were rebuilt on a fresh duplicate of `Step 1 - Bar` instead.
+
+**Aesthetic direction correction:** inspecting `Step 1 - Bar` revealed it had already pivoted to a white page background with dark charcoal (`#0a0a0a`) header/footer and glitch/scanline/chromatic-aberration accents (see `assets/possessionless-white-sections-fix.css`, `assets/possessionless-header-grain-fix.css`) — contradicting the original "dark/black" brief. Confirmed with the user this white-body direction is now current (recorded in `.claude/skills/possessionless-brand/knowledge/website.md`). All CRO additions below use theme color-scheme variables (`var(--color-foreground)` etc.) rather than hardcoded colors, and the homepage MOF section uses `scheme-8` (white) to match rather than the dark `scheme-4` used in the first pass.
+
+Live theme was never modified throughout. Current dev theme role confirmed UNPUBLISHED after all changes.
 
 ## What shipped on the dev theme (`templates/product.json`, `templates/index.json`)
 
@@ -37,6 +41,10 @@ These were corrections of existing wrong/missing data explicitly requested, not 
 
 ## Verification performed
 
-- All 3 modified theme JSON files validated for syntax before upload; 2 of 3 (`product.json`, `index.json`) were accepted by Shopify's own theme schema validation (which also correctly rejected the third, proving the check is real).
-- Confirmed dev theme role remained `UNPUBLISHED` and live theme role remained `MAIN` throughout.
+- All modified theme JSON files (both the original Copy-of-Vessel-based pass and the rebased Step-1-Bar-based pass) validated for syntax before upload; accepted by Shopify's own theme schema validation on both passes (which also correctly rejected one file — the footer link attempt — proving the check is real, not a rubber stamp).
+- Confirmed dev theme role remained `UNPUBLISHED` and live theme role remained `MAIN` throughout, including after the rebase.
 - Could not run a rendered-browser check (Playwright) in this session — network policy blocked it. Visual/mobile verification still needs either a rendered preview pass or a differently-configured session.
+
+## Outstanding manual step
+
+Delete the theme named **"OLD - please delete (was Copy of Vessel based)"** in Shopify admin → Online Store → Themes → Draft themes. This session's tools are blocked from doing this (`themeDelete` is disabled by the MCP server's safety policy).

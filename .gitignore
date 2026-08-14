@@ -23,3 +23,8 @@ blob-report/
 
 # Local Claude Code settings (machine-specific permission grants)
 .claude/settings.local.json
+
+# In-repo scratch space for staging files before pushing to external systems
+# (e.g. Shopify theme JSON payloads) — never meant to persist, kept inside
+# the repo boundary rather than an external /tmp scratchpad.
+/.scratch/
