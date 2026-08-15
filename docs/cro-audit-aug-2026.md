@@ -191,3 +191,19 @@ Follow-up to Round 10, based on a reference screenshot of another streetwear pro
 **Not done (deliberately out of scope this round):** the reference page's "Find My Size" button, the "Jamal is 6'0 130lbs wearing size MEDIUM" fit-comparison line, and the "LOW STOCK · SALE ENDS SOON" badge — you said layout-only for those, not copy, and didn't ask for them to be built. The low-stock/sale-ending badge in particular would need real inventory/sale-end data behind it before it's worth revisiting — flagging that as the one piece from that reference that's genuine fake-urgency risk if ever added without real numbers.
 
 **Not visually verified** — same session limitation as every round.
+
+## Round 12 — Buy with Shop actually removed, delivery window shortened, XS reordered, image layout changed
+
+You sent a live screenshot of the dev theme plus more reference images and a blunt list of five things. All five done:
+
+1. **Delivery window shortened to 3–4 business days.** `snippets/product-delivery-estimate.liquid`: `min_days`/`max_days` changed from 5/8 to 3/4. Also updated the Shipping accordion text ("U.S. delivery in 5–8 business days" → "3–4 business days") so it doesn't contradict the box above it — same duplicate-messaging trap as every other round.
+
+2. **Buy with Shop button — actually removed this time, real root cause found.** Round 8 removed the `accelerated-checkout` block from `templates/product.json`, which had no effect because that block is `"static": true` — Shopify renders static blocks via a hardcoded `content_for 'block', type: 'accelerated-checkout', id: 'accelerated-checkout'` call inside `blocks/buy-buttons.liquid` itself, regardless of what's in the JSON blocks map. That's the real explanation for the standing discrepancy flagged in Rounds 10–11. Fixed by editing `blocks/buy-buttons.liquid` directly — deleted the `content_for` call and the `accelerated-checkout` entry from its schema preset. This is a shared block file, so the Shop Pay button is gone everywhere `buy-buttons` renders, not just this product.
+
+3. **Add to Cart is wider.** No new CSS needed — Round 8 had already added `.product-form-buttons .add-to-cart-button { flex: 1 1 auto; width: 100%; }`, intended to let Add to Cart fill the space next to the quantity stepper once Shop Pay was gone. It just never had the chance to take effect while Shop Pay was still rendering. Now that item 2 actually removed it, this existing rule does the job. Left the quantity stepper in place rather than going full-bleed single-button like the reference — you said "wider, not like theirs."
+
+4. **XS moved to the front of the size row.** Reordered the Size option's values on all 4 products via `productOptionsReorder` (XS, S, M, L, XL) — a live catalog change, same category as the earlier variant work. Verified: size selector order is now XS/S/M/L/XL everywhere.
+
+5. **Image layout changed to match your reference (small boxes on the left, less zoomed).** In `templates/product.json`'s media-gallery block: `slideshow_controls_style` changed from `dots` to `thumbnails` (the `thumbnail_position: left` setting was already sitting in the JSON from a much earlier round but silently inert — `dots` was the active pagination mode, so it was never used), and `aspect_ratio` changed from `adapt` (uncropped, fills whatever height the image naturally has) to `1/1.25` (fixed portrait box) so images render at a consistent, smaller, contained size instead of stretching to fill the frame.
+
+**Not visually verified** — same limitation as every round. Items 3 and 5 in particular are exactly the kind of layout change that needs your eyes on the real render before calling them done.
