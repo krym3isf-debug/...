@@ -527,3 +527,13 @@ You confirmed the cart drawer is nearly perfect now (transparent images, sizing,
 Pushed `snippets/header-actions.liquid`, `snippets/cart-summary.liquid`, `assets/possessionless-white-sections-fix.css` — verified all three by reading them back, matches exactly. Theme role reconfirmed `UNPUBLISHED`.
 
 **Not visually verified by me** — same network limitation as every round.
+
+## Round 36 — payment icons: real iPhone screenshot pointed at a WebKit compositing bug, not a Liquid logic bug
+
+You sent an actual iPhone Safari screenshot confirming the drawer looks right everywhere else, but the payment-icon row is still just blank space under Check Out — a real bug, not caching (a genuine device render, not the preview iframe).
+
+Round 35's fix (removing the curated-string matching, moving the icons inside `.cart__ctas`) was correct as far as the Liquid logic goes, but didn't address the real cause: `.cart-drawer__summary` (the sticky panel holding the checkout button and everything below it) has a `mask-image: linear-gradient(...)` — a cosmetic scroll-fade effect at the panel's top edge. iOS/WebKit Safari has known rendering bugs combining `mask-image` with `position: sticky` on an element whose content height can change, which this panel's does now that a payment-icon row was added below the checkout button. The most likely explanation: the icons are genuinely in the DOM and correctly sized, but WebKit's compositor isn't painting them within the masked region on a real device, even though nothing looks wrong in a static read of the CSS.
+
+Removed the `mask-image` entirely rather than chasing the exact WebKit quirk further — a subtle fade effect isn't worth losing real, functional content over. Pushed `snippets/header-actions.liquid`, verified by reading it back — matches exactly, `mask-image` gone. Theme role reconfirmed `UNPUBLISHED`.
+
+**Still can't visually verify from this session** — this fix specifically needs a real-device check since that's what surfaced the bug in the first place; the preview iframe this session would use (if it had browser access at all) wouldn't reproduce a WebKit-specific compositing issue anyway.
