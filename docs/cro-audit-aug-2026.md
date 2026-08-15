@@ -537,3 +537,15 @@ Round 35's fix (removing the curated-string matching, moving the icons inside `.
 Removed the `mask-image` entirely rather than chasing the exact WebKit quirk further — a subtle fade effect isn't worth losing real, functional content over. Pushed `snippets/header-actions.liquid`, verified by reading it back — matches exactly, `mask-image` gone. Theme role reconfirmed `UNPUBLISHED`.
 
 **Still can't visually verify from this session** — this fix specifically needs a real-device check since that's what surfaced the bug in the first place; the preview iframe this session would use (if it had browser access at all) wouldn't reproduce a WebKit-specific compositing issue anyway.
+
+## Round 37 — payment icons removed (preference reversal), checkout block centered in the bottom space
+
+After seeing the drawer with Round 36's fix applied, you changed your mind on the payment-icon row entirely: "i lowkey liek this without the payment options at the bottom leave it how it is." Not a bug — the feature (built across Rounds 31, 32, 33, 35, 36) is gone by request rather than debugged further.
+
+1. **Payment icons removed.** Deleted the entire block from `snippets/cart-summary.liquid`: the `shop.enabled_payment_types` loop/markup and all four associated CSS rules (`.cart-summary__payment-icons`, `-list`, `-icon`, `-icon *`). Also dropped the now-unneeded `overflow: visible` on `.cart__ctas` that existed only to keep the icon row from clipping. The drawer now ends at the Check Out button, same as before this whole feature started.
+
+2. **Checkout button centered in the leftover bottom space.** You liked the drawer without the icons but wanted the checkout button "even at the bottom" instead of flush against the very edge with a gap above it. Cause: `.cart-drawer__summary` in `snippets/header-actions.liquid` used `margin-top: auto`, which in a flex column pushes an element all the way to the far edge — all the slack space collects above it, none below. Changed to `margin-block: auto`, which splits that slack space evenly above and below, centering the block within the available room instead of pinning it to the bottom. `position: sticky; bottom: 0;` was left untouched, so on a longer cart (enough items to scroll) it still sticks to the bottom edge as intended — the centering only matters when there's blank space to center within.
+
+Pushed `snippets/cart-summary.liquid`, `snippets/header-actions.liquid` — verified both by reading them back, matches exactly. Theme role reconfirmed `UNPUBLISHED`.
+
+**Not visually verified by me** — same network limitation as every round.
