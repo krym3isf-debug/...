@@ -373,3 +373,15 @@ You sent a screenshot: still not centered after Round 23.
 Pushed `snippets/product-delivery-estimate.liquid`, verified by reading the file back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
 
 **Not visually verified** — same limitation as every round, and centering specifically has now taken multiple attempts across this session (delivery box in Round 20, zoom dialog in Round 22, this box's text in Round 23-24) — worth a hard screenshot check on your end before considering it settled.
+
+## Round 25 — delivery box actually centered, real cause found from a full-page screenshot
+
+Rounds 23-24 didn't fix it — you sent a hard-refreshed full-page screenshot showing the box still left-shifted. That screenshot was the first time this session could see the real DOM in context (this session has no browser/network access to the live storefront — confirmed by directly attempting to fetch the page mid-round, which returned an egress-blocked error), and it showed the actual bug plainly.
+
+**Real root cause:** the shipping icon (`icon-shipping.svg`) never actually renders anything visible in this box — across every round's screenshot, going back to when it was first wired in, there's no icon shown. Round 24's fix pulled that icon out of the flex row and gave it `position: absolute; left: 20px`, which meant adding `padding-left: 56px` to the box to keep the text from overlapping it — 56px on the left vs. 20px on the right. That's an asymmetric content box: `text-align: center` correctly centers the text *within the padded content area*, but that content area itself was already off-center inside the box's visible border by 36px, which reads as the text being left-shifted overall. Text-align was working exactly as told the whole time — the box it was centering inside of was wrong.
+
+**Fix:** removed the icon markup and its CSS entirely (it was inert weight causing two straight rounds of centering bugs and adding nothing visible), and reset the box to plain symmetric padding (`18px 20px` all around). Text now centers against the box's actual visible bounds, not an icon-skewed content area.
+
+Pushed `snippets/product-delivery-estimate.liquid`, verified by reading the file back — matches exactly, confirmed symmetric padding. Theme role reconfirmed `UNPUBLISHED`.
+
+**Not visually verified by me** — this session's network access to the live storefront is confirmed blocked (direct fetch attempt returned `EGRESS_BLOCKED`), so your screenshots are the only way to check this. Please confirm on your end.
