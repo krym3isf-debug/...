@@ -295,3 +295,17 @@ Correction to Round 17: you clarified you liked the scanline texture and the act
 Pushed both files, verified live, theme role still `UNPUBLISHED`.
 
 **Not visually verified** — same limitation as every round.
+
+## Round 19 — real root cause for the broken images, description text shrunk, footer arrow button unboxed
+
+1. **Found and fixed the actual image bug.** Read `snippets/product-media-gallery-content.liquid` directly instead of guessing again: it force-appends a `media-fit-cover` class to every gallery image whenever `aspect_ratio != 'adapt'` — meaning Round 12's switch to a fixed `1/1.25` portrait ratio silently put every image (product photos and the size-chart infographic alike) into hard `object-fit: cover` cropping, regardless of the `media_fit: contain` value still sitting in the JSON (that setting only applies when `aspect_ratio == 'adapt'`, confirmed straight from the snippet's own logic). That's what was cropping/garbling the size-chart thumbnail. Reverted `aspect_ratio` back to `adapt` in `templates/product.json` — images now display at their natural ratio with no forced cropping. Left `thumbnail_position: left` and `slideshow_controls_style: thumbnails` in place since those aren't tied to the aspect-ratio bug.
+
+2. **Description text sized down.** 0.95rem (from Round 18) read as too large once stacked on top of the site-wide 16px paragraph bump — dropped to 0.82rem, line-height 1.5. Also normalized any heading-styled line inside the description block (there's now a "Stay true to size..." note rendering as an `<h5>`, added outside this session's edits) to match the fact list's size/weight instead of popping out at a different size — that's the "straight"/uniform-block fix.
+
+3. **Bold scope already correct** — checked the live description HTML directly: `<strong>Fabric:</strong>`, `<strong>Style:</strong>`, `<strong>Graphics:</strong>` already only wrap the label word before each colon, not the value after it. No change needed there.
+
+4. **Footer email signup arrow — box removed.** `footer .email-signup__button` had a `1px solid` border making it read as a circle/square around the arrow; dropped to `background: transparent; border: none` so only the arrow icon shows on the dark bar.
+
+Pushed `templates/product.json` and `assets/possessionless-white-sections-fix.css`, verified live, theme role still `UNPUBLISHED`.
+
+**Not visually verified** — same limitation as every round, but the aspect-ratio revert is the one most worth confirming since it directly undoes a Round 12 change.
