@@ -277,3 +277,21 @@ All of it removed: `body::after`, `body::before`, both keyframe blocks, the flic
 Pushed to `assets/possessionless-white-sections-fix.css`, verified live (grepped the pushed file for any leftover glitch/scanline/blend-mode references — zero), theme role still `UNPUBLISHED`.
 
 **Not visually verified** — same limitation as every round, but this is the one most worth a hard look given it reverses several rounds of prior work.
+
+## Round 18 — scanline restored, real fix for the small/bad-fonts complaint
+
+Correction to Round 17: you clarified you liked the scanline texture and the actual complaint was font size/legibility, not the line overlay. Fixed both, plus one more thing from that same message.
+
+1. **Scanline restored, glitch/flicker still gone.** Split them apart this time — the static `body::after` scanline+vignette overlay is back in `assets/possessionless-white-sections-fix.css`, but the animated chromatic-aberration glitch and brightness-flicker (the actual blur-causing pieces from Round 17) are not.
+
+2. **Found the real source of the tiny/dense text.** `config/settings_data.json` has `type_size_paragraph` set to `14`px site-wide — genuinely small. Bumped to `16`px, a single theme-setting change that improves body text sizing across the whole site (product descriptions, footer copy, etc.), not just the product page.
+
+3. **Fixed a real bug, not a style choice: product description text was rendering all-caps and small despite its own setting saying otherwise.** The `product_description_8gHdXj` block in `templates/product.json` has `"case": "none"` explicitly set, but the live page showed "FABRIC: 100% COTTON, 240 GSM" in full caps — something in the base theme's paragraph styling was overriding the block's own setting. Added a targeted CSS override (`text-transform: none`, bumped to `0.95rem`, normal letter-spacing, `1.6` line-height) directly on `.product-information .rte` so the Fabric/Fit/Graphics facts are actually legible now.
+
+4. **Removed the product-image desaturation filter.** `.card-gallery img` had a resting `filter: saturate(0.88) contrast(1.03)` from Round 7/12 that was making product photos look washed out next to crisp reference images — dropped the resting desaturation, kept a light contrast bump on hover.
+
+**Deliberately not touched — flagging as a bigger decision, not a quiet skip:** the site's actual typeface. Every font role (`type_body_font`, `type_heading_font`, `type_subheading_font`, `type_accent_font`) is set to the same font, `archivo_narrow_n7` — a bold condensed/narrow face used everywhere, which is a real contributor to the "bad fonts" feeling since condensed type reads worse at small sizes than a normal-width sans-serif. Swapping the site's core typeface is a brand-identity-level call, not a CSS tweak, so it wasn't changed here — say the word if you want that looked at directly.
+
+Pushed both files, verified live, theme role still `UNPUBLISHED`.
+
+**Not visually verified** — same limitation as every round.
