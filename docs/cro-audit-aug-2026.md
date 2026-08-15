@@ -419,3 +419,17 @@ You called the sizes "PERFECT" but flagged them as too spread out, and asked for
 Pushed `assets/possessionless-white-sections-fix.css`, verified by reading the file back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
 
 **Not visually verified by me** — same network limitation as every round.
+
+## Round 29 — low-stock color matched to "ORDER NOW", quantity stepper removed, "Add to Bag" reverted to "Add to Cart"
+
+Three requests in one message:
+
+1. **Low-stock indicator recolored to match "ORDER NOW."** `snippets/product-low-stock.liquid`: `.poss-low-stock` color changed from red (`#dc2626`) to the same purple (`#7c3aed`) used on the delivery box's CTA — one consistent accent color across both real-data callouts instead of two different ones.
+
+2. **Quantity stepper (`- 1 +`) removed — real cause, same static-block pattern as the Shop Pay removal back in Round 12.** The `quantity` block on `buy_buttons_B7HMzq` is `"static": true`, meaning it renders via a hardcoded `{% content_for 'block', type: 'quantity', id: 'quantity' %}` call inside `blocks/buy-buttons.liquid` itself — removing it from the JSON blocks map alone wouldn't have done anything, same trap as before. Deleted that `content_for` call directly from the block file (plus its entry from the schema's preset blocks), and removed the now-inert `quantity` entry from `templates/product.json`. This is a shared block file, so it's gone everywhere `buy-buttons` renders, not just this product. Add to Cart already had `flex: 1 1 auto; width: 100%` from Round 12 (originally meant to fill the space after Shop Pay was removed), so it automatically expands to fill the row now that the stepper is gone too — no new CSS needed.
+
+3. **"Add to Bag" reverted to "Add to Cart."** `locales/en.default.json`: `products.product.add_to_cart` changed back from "Add to bag" (a Round 8 wording choice) to "Add to cart," per this request.
+
+Pushed all files (`snippets/product-low-stock.liquid`, `blocks/buy-buttons.liquid`, `templates/product.json`, `locales/en.default.json`), verified by reading each back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
+
+**Not visually verified by me** — same network limitation as every round.
