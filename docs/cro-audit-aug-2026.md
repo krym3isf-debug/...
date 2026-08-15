@@ -234,3 +234,13 @@ Quick styling pass on top of the Round 13 bugfix:
 Pushed to `snippets/product-delivery-estimate.liquid`, verified live, theme role still `UNPUBLISHED`.
 
 **Not visually verified** — same limitation as every round.
+
+## Round 15 — delivery window now counts from order date, not a separate dispatch date
+
+You asked "should it be 19-20??" — good catch, yes.
+
+The Round 13 fix counted the 3-4 business days starting from a separately-computed *dispatch* date (which itself could roll forward for weekend/cutoff-hour), not from today. That's defensible as a literal "3-4 business days of transit after the package ships" reading, but it doesn't match how the box actually reads to a customer — "Ships within 24 hours" already implies near-immediate dispatch, so a separate dispatch-date detour before the business-day count starts just pushes the shown date later than expected for no visible reason.
+
+Simplified `snippets/product-delivery-estimate.liquid` to count business days directly from today (skipping Sat/Sun), dropping the separate dispatch-date/cutoff-hour/weekend-rollover logic entirely — fewer moving parts, easier to hand-verify, and matches the "19-20" expectation. Hand-traced again before pushing: for a Saturday order, business days land Mon(1)/Tue(2)/Wed(3) → 3-day estimate = Wednesday, Thu(4) → 4-day estimate = Thursday. Verified live, theme role still `UNPUBLISHED`.
+
+**Not visually verified** — check the live dates against today's real date one more time.
