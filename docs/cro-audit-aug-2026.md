@@ -385,3 +385,15 @@ Rounds 23-24 didn't fix it — you sent a hard-refreshed full-page screenshot sh
 Pushed `snippets/product-delivery-estimate.liquid`, verified by reading the file back — matches exactly, confirmed symmetric padding. Theme role reconfirmed `UNPUBLISHED`.
 
 **Not visually verified by me** — this session's network access to the live storefront is confirmed blocked (direct fetch attempt returned `EGRESS_BLOCKED`), so your screenshots are the only way to check this. Please confirm on your end.
+
+## Round 26 — delivery box shrunk, size selector made a true square
+
+Confirmed the centering fix worked — two small follow-ups:
+
+1. **Delivery box shrunk slightly.** `snippets/product-delivery-estimate.liquid`: padding `18px 20px` → `13px 16px`, outer margin `16px` → `14px`, label-to-date gap `4px` → `3px`. Same 1px border, just a smaller box overall.
+
+2. **Size selector made a true square, not just a min-size rectangle.** `.product-information .variant-option__button-label` in `assets/possessionless-white-sections-fix.css` previously only set `min-width`/`min-height: 36px`, which lets the box stretch wider than tall if the label content or button padding pushes it — that's the "rectangle, not cube" look in your screenshot. Changed to fixed `width`/`height: 30px` plus `aspect-ratio: 1/1` (belt-and-suspenders so it can't be stretched by content), smaller padding (`4px`), smaller font (`0.68rem`).
+
+Pushed both files, verified by reading them back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
+
+**Not visually verified by me** — same network limitation as every round (confirmed blocked, not guessed).
