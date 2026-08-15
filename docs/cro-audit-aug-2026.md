@@ -244,3 +244,19 @@ The Round 13 fix counted the 3-4 business days starting from a separately-comput
 Simplified `snippets/product-delivery-estimate.liquid` to count business days directly from today (skipping Sat/Sun), dropping the separate dispatch-date/cutoff-hour/weekend-rollover logic entirely — fewer moving parts, easier to hand-verify, and matches the "19-20" expectation. Hand-traced again before pushing: for a Saturday order, business days land Mon(1)/Tue(2)/Wed(3) → 3-day estimate = Wednesday, Thu(4) → 4-day estimate = Thursday. Verified live, theme role still `UNPUBLISHED`.
 
 **Not visually verified** — check the live dates against today's real date one more time.
+
+## Round 16 — removed shipping/returns accordion + reassurance line, centered delivery box, swapped "You may also like" for a plain divider
+
+Three requests in one round:
+
+1. **Deleted the "FREE SHIPPING · SECURE CHECKOUT" line and the entire accordion** (Shipping / Returns & Exchanges / Fit & Sizing / More Questions) from the product page — removed `purchase_reassurance` and `accordion_jjaG39` from `templates/product.json`'s `group_JtXipy.blocks`, per your explicit "delete all this."
+
+   Flagging one thing since it's a step past pure layout: the Returns & Exchanges row was the only place on the product page spelling out the strict no-returns-for-sizing policy, and Fit & Sizing was the only product-page link to the size guide. `products.md` (this repo's brand knowledge file) calls that guide-link the single highest-leverage fix from the original audit, specifically because the refund policy excludes sizing/fit issues. Both are still live on the site elsewhere (`/pages/size-guide`, `/pages/faq`) — this only removed the product-page shortcuts to them. Not undoing it, just flagging it since it's a content/disclosure change, not a pure style one — say the word if you want it back in a lighter-weight form.
+
+2. **Delivery estimate box: centered and better spaced.** `.poss-delivery-estimate` now uses `align-items: center; justify-content: center` (was `flex-start`, hugging left) and bumped padding from `14px 16px` to `18px 20px`, gap from `12px` to `14px`, icon from `20px` to `22px` — box now reads as a centered, evenly-spaced unit instead of content packed against the left edge.
+
+3. **"You may also like" replaced with a plain divider.** Removed the `header` text block from the `product-recommendations` section and swapped in the theme's built-in `_divider` block (1px, square, full-width, 8px top/bottom padding) — confirmed this block type is already in the section's allowed blocks list before using it, rather than guessing at custom CSS.
+
+All three pushed to `templates/product.json` + `snippets/product-delivery-estimate.liquid`, verified live, theme role still `UNPUBLISHED`.
+
+**Not visually verified** — same limitation as every round.
