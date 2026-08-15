@@ -549,3 +549,13 @@ After seeing the drawer with Round 36's fix applied, you changed your mind on th
 Pushed `snippets/cart-summary.liquid`, `snippets/header-actions.liquid` — verified both by reading them back, matches exactly. Theme role reconfirmed `UNPUBLISHED`.
 
 **Not visually verified by me** — same network limitation as every round.
+
+## Round 38 — checkout button back to flush-bottom (centering reverted)
+
+You sent screenshots of the centered version across a few different cart sizes (1–4 items) and decided it wasn't right after all: "i want it to be all the way at the bottom to look clean." Round 37's centering left visible empty space both above and below the checkout block — you'd rather have it pinned to the very bottom edge with no gap below, matching how it looked before Round 37.
+
+Reverted `.cart-drawer__summary` in `snippets/header-actions.liquid` from `margin-block: auto` back to `margin-top: auto`, which pushes the block flush to the bottom of the drawer's flex column (all slack space collects above it, none below). `position: sticky; bottom: 0;` untouched throughout.
+
+Pushed `snippets/header-actions.liquid`, verified by reading it back — matches exactly, `margin-top: auto` confirmed. Theme role reconfirmed `UNPUBLISHED`.
+
+**Not visually verified by me** — same network limitation as every round.
