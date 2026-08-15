@@ -559,3 +559,13 @@ Reverted `.cart-drawer__summary` in `snippets/header-actions.liquid` from `margi
 Pushed `snippets/header-actions.liquid`, verified by reading it back — matches exactly, `margin-top: auto` confirmed. Theme role reconfirmed `UNPUBLISHED`.
 
 **Not visually verified by me** — same network limitation as every round.
+
+## Round 39 — product description: bold flipped from the label to the fact
+
+You asked to make only the words after each colon bold in the Fabric/Style/Graphics facts block. Checked the actual product data via the Admin API first rather than guessing at markup: every product's `descriptionHtml` follows the same pattern, e.g. `<p><strong>Fabric:</strong> Cotton fleece, 420 GSM<br><strong>Style:</strong> ...</p>` — the label before each colon is hardcoded bold (`<strong>`) in every product's description, and the fact after it is plain text. Confirmed this exact structure across multiple products (Sigil Sweatpants, Baggy Denim Jeans, Sigil Sweatshirt, Fur ZipUp Hoodie) — it's a consistent, catalog-wide copy format, not one-off content.
+
+Since every product shares the identical `<strong>Label:</strong> value` structure, this could be fixed once via CSS rather than editing each product's description individually: added `.product-information .rte p { font-weight: 700 }` (bolds the whole paragraph, including the fact text) and `.product-information .rte p strong { font-weight: 400 }` (knocks the label back down to normal, since it's the more specific selector). Scoped to `.rte p` only, so the sizing-note heading below the facts (a separate `<h5>`) is untouched.
+
+Pushed `assets/possessionless-white-sections-fix.css`, verified by reading it back — matches exactly. Theme role reconfirmed `UNPUBLISHED`. This should apply to every product using the standard Fabric/Style/Graphics format, not just the one in your screenshot.
+
+**Not visually verified by me** — same network limitation as every round.
