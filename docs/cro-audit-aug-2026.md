@@ -349,3 +349,15 @@ Fixed by making the containers themselves centering flex boxes instead of relyin
 Pushed `assets/possessionless-white-sections-fix.css`, verified by reading the actual file content back (not just the mutation response) — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
 
 **Not visually verified** — same limitation as every round, but zoom-dialog centering specifically needs a real click-to-zoom check on your end.
+
+## Round 23 — delivery box text centered, "Estimated delivery:" label unbolded
+
+Two small fixes to `snippets/product-delivery-estimate.liquid`:
+
+1. **Text centered.** The box's own flex container centers the icon+text column as a unit, but the text *inside* that column was still `text-align: left` — a leftover from before Round 16 asked for the box to be centered. Changed to `text-align: center` and made `.poss-delivery-estimate__text` a centered flex column, so both lines (the date line and the "Ships within 24 hours..." line) are now centered, not just the block as a whole.
+
+2. **"Estimated delivery:" unbolded — real cause, not a CSS oversight.** That label was already set to `font-weight: 400` in the CSS; it kept rendering bold anyway because the site's entire body font (`type_body_font` in `config/settings_data.json`) is `archivo_narrow_n7` — a single static bold-weight font file, not a variable font. When only one weight of a font is loaded, `font-weight: 400` has nothing lighter to fall back to, so the browser just renders the only face it has (bold). This is the same standing typeface issue flagged since Round 18, but here it's narrow enough to fix locally without touching the site-wide font: wrapped "Estimated delivery:" in its own `.poss-delivery-estimate__label` span and gave just that span a normal-weight system sans-serif fallback stack, leaving the bold brand font in place everywhere else including the date itself (still intentionally bold) and the rest of the site.
+
+Pushed, verified by reading the file back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
+
+**Not visually verified** — same limitation as every round.
