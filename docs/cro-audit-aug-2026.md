@@ -497,3 +497,17 @@ The payment-icon row was still stacking one-per-row despite Round 32's fix, plus
 Pushed `snippets/cart-products.liquid` and `snippets/cart-summary.liquid`, verified both by reading them back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
 
 **Not visually verified by me** — same network limitation as every round, but the payment-icon fix specifically deserves a hard look since the same targeted-class approach already failed once.
+
+## Round 34 — transparent thumbnail backgrounds, bigger images, wider drawer, redundant close-button fix
+
+1. **Transparent images — real cause, no image swap needed.** Checked the actual product media via the Admin API: the cart thumbnail already uses the product's real front-view PNG (the same one used everywhere else on the site), and it's already a transparent-background product shot, not an on-model photo with a solid backdrop. The black box around it in your screenshot was `.cart-items__media-container`/`.cart-items__media-image` having no explicit transparent background of their own — the base theme's default container background (a dark placeholder tone meant for image-loading states) was showing through the transparent parts of the PNG. Added `background: transparent !important` directly on both, matching the same fix already applied to the product-page gallery. No different image needed.
+
+2. **Thumbnails bigger.** `--cart-item-media-width-min`/`-max` and the grid column width both bumped from `2.5rem–7.5rem` to `4rem–9rem` (`clamp(4rem, 20cqi, 9rem)`), in both the drawer and desktop cart-page layouts.
+
+3. **Drawer widened.** `.cart-drawer__dialog` was using the theme's shared `--sidebar-width` variable (also used by the search/filter drawers elsewhere) — rather than changing that shared value and risking those other drawers, added a direct override just for the cart drawer: `width: min(480px, 95vw)` (up from whatever the shared default was).
+
+4. **Close button — pushed a stronger, redundant version of the same fix.** Round 32 already pushed a `.cart-drawer__close-button { background: transparent !important; ... }` override and it verified correctly in the file, but you're still seeing a black box, which matches something this session hit once before with the delivery box: a fix that's genuinely correct in the pushed source but not visible without a hard refresh (browser cache). Pushed a belt-and-suspenders version anyway — the same properties repeated across three selector variants (class-only, tag+class, and the full class list) so there's no plausible specificity gap left — but if the black box is still there after a hard refresh or incognito window, that's the next thing to check rather than another CSS attempt.
+
+Pushed `snippets/cart-products.liquid`, `snippets/header-actions.liquid`, `assets/possessionless-white-sections-fix.css` — verified all three by reading them back, matches exactly. Theme role reconfirmed `UNPUBLISHED`.
+
+**Not visually verified by me** — same network limitation as every round.
