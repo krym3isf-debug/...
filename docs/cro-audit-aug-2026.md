@@ -511,3 +511,19 @@ Pushed `snippets/cart-products.liquid` and `snippets/cart-summary.liquid`, verif
 Pushed `snippets/cart-products.liquid`, `snippets/header-actions.liquid`, `assets/possessionless-white-sections-fix.css` — verified all three by reading them back, matches exactly. Theme role reconfirmed `UNPUBLISHED`.
 
 **Not visually verified by me** — same network limitation as every round.
+
+## Round 35 — cart drawer confirmed looking right, first item spacing, real announcement-bar fix, checkout-page question answered
+
+You confirmed the cart drawer is nearly perfect now (transparent images, sizing, close button, one-line titles all landed). Two follow-ups plus one clarification:
+
+1. **First item no longer hugs the logo.** `.cart-drawer__items` had no top padding of its own — the sticky header and the item list sat flush against each other with nothing scrolled. Added `padding-block-start: 20px`.
+
+2. **Payment icons still missing — simplified the logic instead of guessing again.** Round 34's fix used a curated allowlist matching against specific payment-type strings (`visa`, `master`, `paypal`, etc.) — a plausible source of silent failure if any of those guessed strings don't exactly match what Shopify's `shop.enabled_payment_types` actually returns for this store (e.g. `shop_pay` vs the real `shopify_pay`). Removed the curation entirely: now shows whatever the store has enabled, capped at 6, no string-matching risk. Also moved the icons block *inside* `.cart__ctas` (was a sibling div after it) and switched that container from CSS grid to flex, since grid's implicit row sizing was a plausible reason a child appended after the original items could lay out unexpectedly.
+
+3. **Real root cause found for the grey header/announcement text.** Every color override pushed so far (`--color-foreground: #fff`, explicit `color: #fff !important` on nav/announcement selectors) was correct but beside the point — read `base.css` directly and found this theme has a pre-existing, unrelated rule: `.announcement-bar p, span, a { opacity: 0.55; }`. The text was already white; it's rendered at just-over-half opacity against the black bar, which reads as grey. Added `opacity: 1 !important` to override it — the actual fix, after three rounds of color-based attempts that were never going to touch an opacity problem.
+
+4. **Clarified, not a bug:** the dark "Express checkout" screenshot you flagged is Shopify's real Checkout page — a separate, Shopify-hosted flow this theme doesn't control. The `show_accelerated_checkout_buttons` setting turned off in Round 31 only ever affected the cart drawer/cart page, never Checkout, so Express checkout is still live there exactly as you wanted (hidden in cart, present at checkout). The grey placeholder boxes are the real payment-provider buttons — they render unstyled in preview since wallet widgets don't fully initialize outside a live checkout session.
+
+Pushed `snippets/header-actions.liquid`, `snippets/cart-summary.liquid`, `assets/possessionless-white-sections-fix.css` — verified all three by reading them back, matches exactly. Theme role reconfirmed `UNPUBLISHED`.
+
+**Not visually verified by me** — same network limitation as every round.
