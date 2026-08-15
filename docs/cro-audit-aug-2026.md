@@ -325,3 +325,15 @@ Four separate requests:
 Pushed `templates/product.json`, `assets/possessionless-white-sections-fix.css`, and the new `snippets/product-low-stock.liquid`, verified all three live, theme role still `UNPUBLISHED`.
 
 **Not visually verified** — same limitation as every round. The low-stock threshold (10) is a default, not a number you gave me — flag if you want it different.
+
+## Round 21 — real fix for stock-not-updating-on-size-click, images scaled/centered, size boxes smaller
+
+1. **Low-stock indicator now actually updates when you click a different size — investigated the real mechanism instead of guessing.** Read `snippets/variant-main-picker.liquid`: each size button is a plain `<input type="radio" data-variant-id="...">`. Rather than assume how (or whether) this theme's JS re-renders custom-liquid blocks on variant change, rewrote `snippets/product-low-stock.liquid` to embed every variant's real inventory count in a small JSON blob at render time, plus a script that listens for the native `change` event on those radio inputs directly — that event fires on click regardless of whatever else the theme's own JS does with it. Clicking a size now updates the "Only X left in stock" line (or hides it) using that size's real number, client-side, no page reload. The "10 for every product" you saw was two different products whose default-loaded variants genuinely both had 10 in stock — not a bug in that number itself, just that it was frozen at page-load and never changed when you clicked other sizes. That's the part that's fixed.
+
+2. **Images scaled down and centered — including the size-chart graphic that was running off-screen.** Traced this to a real gap in the theme: `snippets/product-media-gallery-content.liquid` only applies a viewport-height cap when `aspect_ratio` is a fixed value — but that's exactly the setting Round 19 moved away from (fixed ratios force `object-fit: cover` cropping, confirmed earlier). With `aspect_ratio: adapt`, there's no height cap at all, so a naturally tall image (like the size chart) renders at its full native height — which can run well past the viewport, forcing a scroll. Added our own `max-height: 78vh` + `object-fit: contain` directly on the product images (both the main gallery and the click-to-zoom dialog, capped at `100vh` there) so nothing needs scrolling to see in full, without reintroducing the cropping bug.
+
+3. **Size selector shrunk further.** 42px → 36px, tighter padding, smaller label text.
+
+Pushed `assets/possessionless-white-sections-fix.css` and `snippets/product-low-stock.liquid`, verified live, theme role still `UNPUBLISHED`.
+
+**Not visually verified** — same limitation as every round, but the stock-on-size-click behavior specifically depends on real click interaction to confirm, which I can't do from here.
