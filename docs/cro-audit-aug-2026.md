@@ -337,3 +337,15 @@ Pushed `templates/product.json`, `assets/possessionless-white-sections-fix.css`,
 Pushed `assets/possessionless-white-sections-fix.css` and `snippets/product-low-stock.liquid`, verified live, theme role still `UNPUBLISHED`.
 
 **Not visually verified** — same limitation as every round, but the stock-on-size-click behavior specifically depends on real click interaction to confirm, which I can't do from here.
+
+## Round 22 — click-to-zoom image actually centered (Round 21's fix was a no-op)
+
+You sent a screenshot of the zoomed hoodie image sitting flush-left in the lightbox with empty space on the right — Round 21's `margin-inline: auto` on `.dialog-zoomed-gallery .product-media__image` didn't center it.
+
+**Same root cause as the Round 20 delivery-box bug, recognized faster this time.** `margin-inline: auto` only centers an element within a container that's wider than the element itself. The list item the zoomed image sits in spans the full dialog width with no centering behavior of its own — so the image, sized to its own content via `object-fit: contain`, had nothing to be centered against. `margin: auto` on the image alone was a no-op by construction, same as the delivery box before it got an explicit `width: 100%`.
+
+Fixed by making the containers themselves centering flex boxes instead of relying on the image's own margin: `.dialog-zoomed-gallery .product-media-container` and `.dialog-zoomed-gallery .product-media` now both get `display: flex; align-items: center; justify-content: center; width: 100%; max-height: 100vh`, with the image itself staying `object-fit: contain; width: auto; height: auto`.
+
+Pushed `assets/possessionless-white-sections-fix.css`, verified by reading the actual file content back (not just the mutation response) — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
+
+**Not visually verified** — same limitation as every round, but zoom-dialog centering specifically needs a real click-to-zoom check on your end.
