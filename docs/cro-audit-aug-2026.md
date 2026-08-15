@@ -207,3 +207,17 @@ You sent a live screenshot of the dev theme plus more reference images and a blu
 5. **Image layout changed to match your reference (small boxes on the left, less zoomed).** In `templates/product.json`'s media-gallery block: `slideshow_controls_style` changed from `dots` to `thumbnails` (the `thumbnail_position: left` setting was already sitting in the JSON from a much earlier round but silently inert — `dots` was the active pagination mode, so it was never used), and `aspect_ratio` changed from `adapt` (uncropped, fills whatever height the image naturally has) to `1/1.25` (fixed portrait box) so images render at a consistent, smaller, contained size instead of stretching to fill the frame.
 
 **Not visually verified** — same limitation as every round. Items 3 and 5 in particular are exactly the kind of layout change that needs your eyes on the real render before calling them done.
+
+## Round 13 — fixed a real date-math bug in the delivery estimate (was showing dates ~2 months out)
+
+You caught it directly: the box was showing "Thu, Oct 12 – Fri, Oct 13" instead of anything close to 3-4 business days out.
+
+**Root cause:** `snippets/product-delivery-estimate.liquid` had a Liquid filter-chaining bug present since the file's original creation (Round 1), carried forward unchanged through Rounds 10–12 because I treated the date logic as "already correct, just needs a copy/CSS pass" without ever actually checking the arithmetic. The bug: `cursor | plus: i | times: day_seconds` — Liquid filters apply left to right, so this computes `(cursor + i) * 86400`, not `cursor + (i * 86400)`. Since `cursor` is already a large Unix timestamp, multiplying the whole thing by 86400 again blows the result out by orders of magnitude — explains the ~2-month-out dates you saw (the actual overflow is far larger than 2 months, but Liquid's date filter silently produces *some* date out of whatever garbage number it's given rather than erroring, so the visible symptom undersold how broken the underlying math was).
+
+**Fix:** rewrote the whole date computation from scratch, computing each offset as its own seconds value before adding it (`dispatch_offset_seconds = dispatch_offset_days | times: day_seconds`, then `now | plus: dispatch_offset_seconds` — never chaining `plus` directly into `times` again). Also added a fix while in there: if the computed dispatch date lands on a Saturday or Sunday, it now rolls forward to the next Monday before the business-day count starts — the original logic never accounted for "today" itself being a weekend, which would have produced a same-day-dispatch claim on a day the store presumably doesn't ship.
+
+Manually traced the corrected logic by hand against today's real date before pushing (rather than assuming it was right, the mistake that caused this bug to survive three rounds): dispatch correctly rolls to the next business day, then walks forward 3 and 4 business days from there, skipping weekends. Pushed to `snippets/product-delivery-estimate.liquid`, verified live on the dev theme, theme role confirmed still `UNPUBLISHED`.
+
+**Lesson for future rounds:** "preserved verbatim because it looked like real computed logic" is not the same as "verified correct." Should have hand-traced this the first time it was touched in Round 10 instead of trusting that surviving three rounds of copy/paste meant it worked.
+
+**Not visually verified** — same limitation as every round, but this one is worth double-checking the actual displayed date against today's real date before moving on.
