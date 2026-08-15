@@ -260,3 +260,20 @@ Three requests in one round:
 All three pushed to `templates/product.json` + `snippets/product-delivery-estimate.liquid`, verified live, theme role still `UNPUBLISHED`.
 
 **Not visually verified** — same limitation as every round.
+
+## Round 17 — removed the decay/glitch visual pass entirely (was making text unreadable)
+
+You called it out directly: "why is the site wording all so blurry... make it nice like worst work you can see everything clear." Correct call — reversing course on this.
+
+Root cause: the "trapped in a rusted-out room" decay/glitch treatment from Rounds 5–7 (`assets/possessionless-white-sections-fix.css`, section 4) was doing three things site-wide, all the time:
+- An always-on `body::after` scanline overlay (`repeating-linear-gradient`, 1px lines every 3px) + a rust-tinted vignette, both with `mix-blend-mode: multiply` — this washed a subtle texture over literally every page, all the time, which is almost certainly what read as "blurry" compared to a clean reference page with no overlay at all.
+- A `possessionless-glitch` keyframe animation — chromatic-aberration `text-shadow` (red/cyan offset duplicates of the text) + `transform: translate()` + `clip-path` jump-cuts — applied on a loop to headings, nav links, prices, and the announcement bar. Screenshotted mid-cycle, this looks exactly like a blur/ghosting artifact, which is what showed up in your first screenshot on the sticky add-to-cart bar.
+- A `possessionless-page-flicker` brightness-pulse animation on `<body>`, and a rare vertical "film scratch" streak.
+
+All of it removed: `body::after`, `body::before`, both keyframe blocks, the flicker animation binding, and the glitch-application media query targeting headings/prices/nav/footer/accordion labels. Rewrote the file's own section comment to match (was "site-wide decay/glitch pass," now "button/hover polish").
+
+**Left alone, since they're not related to blur/readability and weren't called out:** the broken-corner clip-path on buttons, the product-image desaturate/hover-sharpen effect, and the title/price hover underline sweep. Flag if you want those gone too — they're a separate design choice from the glitch pass, not part of what was making text hard to read.
+
+Pushed to `assets/possessionless-white-sections-fix.css`, verified live (grepped the pushed file for any leftover glitch/scanline/blend-mode references — zero), theme role still `UNPUBLISHED`.
+
+**Not visually verified** — same limitation as every round, but this is the one most worth a hard look given it reverses several rounds of prior work.
