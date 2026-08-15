@@ -569,3 +569,13 @@ Since every product shares the identical `<strong>Label:</strong> value` structu
 Pushed `assets/possessionless-white-sections-fix.css`, verified by reading it back — matches exactly. Theme role reconfirmed `UNPUBLISHED`. This should apply to every product using the standard Fabric/Style/Graphics format, not just the one in your screenshot.
 
 **Not visually verified by me** — same network limitation as every round.
+
+## Round 40 — broken "Policies" nav link + FAQ heading consistency (live store changes, not dev-theme)
+
+You reported the "Policies" nav item 404ing both on hover-then-click and on a direct link. **Note: both fixes in this round are store-wide, not scoped to the dev theme** — navigation menus and pages in Shopify aren't per-theme, so these are live on the published site immediately, unlike every CSS/Liquid change earlier in this log.
+
+1. **"Policies" nav link fixed.** The main menu's top-level "Policies" item was type `HTTP` pointing at a literal `/policies` URL, which isn't a real route — Shopify has no built-in policies-index page. Its six dropdown children (Contact, FAQ, Shipping Policy, Refund Policy, Privacy Policy, Terms & Conditions) were all valid, real pages the whole time — hovering worked fine, only the parent link itself 404'd on click. Confirmed with you which destination to use rather than guessing; repointed the top-level item to the existing Shipping Policy page (`type: PAGE`, `resourceId` set, resolves to `/pages/shipping-policy`) via `menuUpdate`. Verified by reading the menu back — all six dropdown children still intact, parent now resolves correctly.
+
+2. **FAQ page heading consistency.** Checked the actual FAQ page content first — it's already thorough and accurate (shipping time, returns/exchanges, damaged/wrong items, tracking, address changes, international shipping, lost packages, contact fallback), and matches the Shipping Policy/Refund Policy pages' facts exactly. One heading broke the Q&A pattern every other section follows: "Shipping Time" wasn't phrased as a question. Changed it to "How long does shipping take?" to match the other seven headings. No other content changed.
+
+Pushed via `menuUpdate` and `pageUpdate` (Admin API resources, not theme files) — both re-verified by reading back after the mutation. Since these are live-store changes, **they're visible on the actual site right now**, not just the dev-theme preview.
