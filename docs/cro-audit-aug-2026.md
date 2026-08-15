@@ -481,3 +481,19 @@ Your screenshot showed exactly what Round 31's "flag it again" note anticipated,
 Pushed `assets/possessionless-white-sections-fix.css` and `snippets/cart-summary.liquid`, verified both by reading them back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
 
 **Not visually verified by me** — same network limitation as every round, but item 1 here is worth double-checking carefully since it was actively making real content invisible, not just a style preference.
+
+## Round 33 — grey duplicate price removed, title fits one line, "Size:" label added, payment icons actually fixed this time
+
+The payment-icon row was still stacking one-per-row despite Round 32's fix, plus three new cart-item requests:
+
+1. **Grey duplicate price under the size removed.** `snippets/cart-products.liquid` was rendering the item's price *twice* — once under the size/variant info (the grey one you flagged) and again in the price column on the right (same number, since quantity was 1). Removed the redundant `.cart-items__unit-price-wrapper` block from the markup entirely rather than just hiding it with CSS — it was dead weight, not a variant that's sometimes needed.
+
+2. **Product title shrunk to fit one line.** `.cart-items__title` font-size dropped to `0.85rem`, plus `white-space: nowrap; overflow: hidden; text-overflow: ellipsis` as a permanent safety net so even a longer product name in future never wraps to a second line — it'll truncate with `…` instead.
+
+3. **"Size:" label added.** The option name (`Size`) was already in the markup but set to `visually-hidden` (screen-reader-only) — only the value (`S`) was visible. Removed that class so it reads "Size: S" instead of just "S".
+
+4. **Payment icons — actually fixed this time, real cause found.** Round 32's fix targeted `.icon` and `svg` classes directly, but that selector never matched — `payment_type_svg_tag` doesn't necessarily output an element with either of those, so the size override silently did nothing and the icons kept rendering at their oversized default, one per row. Replaced with a universal selector (`.cart-summary__payment-icon *`) that forces size on *whatever* element actually renders inside each list item, regardless of its tag or class — guaranteed to reach the real element this time. Icons are now capped at 30×18px with `object-fit: contain`.
+
+Pushed `snippets/cart-products.liquid` and `snippets/cart-summary.liquid`, verified both by reading them back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
+
+**Not visually verified by me** — same network limitation as every round, but the payment-icon fix specifically deserves a hard look since the same targeted-class approach already failed once.
