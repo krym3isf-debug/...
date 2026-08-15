@@ -397,3 +397,13 @@ Confirmed the centering fix worked — two small follow-ups:
 Pushed both files, verified by reading them back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
 
 **Not visually verified by me** — same network limitation as every round (confirmed blocked, not guessed).
+
+## Round 27 — size boxes bigger, gap between them tightened
+
+Round 26 went too far the other way: 30px squares read as too small, and the gap between them (the theme's own default fieldset spacing, never explicitly set by us before) read as too loose once the boxes themselves had shrunk.
+
+`assets/possessionless-white-sections-fix.css`: bumped `.product-information .variant-option__button-label` from `30px` fixed square to `38px`, font `0.68rem` → `0.75rem`. Added an explicit `gap: 6px` on `.product-information .variant-option--buttons` (the fieldset wrapping the row) — this is a new override, since nothing in this stylesheet had touched that gap before; it was inheriting whatever the base theme's default button-style fieldset gap is, which reads generous next to compact 30-38px boxes.
+
+Pushed, verified by reading the file back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
+
+**Not visually verified by me** — same network limitation as every round.
