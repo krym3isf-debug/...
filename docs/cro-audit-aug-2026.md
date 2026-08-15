@@ -309,3 +309,19 @@ Pushed both files, verified live, theme role still `UNPUBLISHED`.
 Pushed `templates/product.json` and `assets/possessionless-white-sections-fix.css`, verified live, theme role still `UNPUBLISHED`.
 
 **Not visually verified** — same limitation as every round, but the aspect-ratio revert is the one most worth confirming since it directly undoes a Round 12 change.
+
+## Round 20 — sticky bar removed, image column narrowed, delivery box centering actually fixed, real-inventory low-stock indicator added
+
+Four separate requests:
+
+1. **Removed the floating "sticky add to cart" popup.** That bottom-corner card (thumbnail + price + Add to Bag) appearing while scrolling was the theme's built-in sticky-cart feature — `main.settings.enable_sticky_add_to_cart` in `templates/product.json`, flipped to `false`.
+
+2. **Image column narrowed ~400px total (200px per side).** Added `.product-information media-gallery { max-width: calc(100% - 400px); margin-inline: auto; }` — falls back to full width under 990px so mobile isn't squeezed.
+
+3. **Delivery box centering — actually fixed this time, found why it silently did nothing in Round 16.** The box's flex container had `justify-content: center` set, but the box itself was never given a width — it was shrink-wrapping to its own content, so "centering content within the box" was centering content within a box exactly the size of that content. No-op by construction. Added `.poss-delivery-estimate { width: 100%; }` so the box spans the column like the Add to Cart button above it, and the existing `justify-content: center` now actually centers the icon+text within real extra space.
+
+4. **New: real-inventory low-stock indicator.** `snippets/product-low-stock.liquid` — shows "Only {{ qty }} left in stock" in red, small, gently blinking (with a `prefers-reduced-motion` off-switch), pulling `variant.inventory_quantity` directly from the selected variant's actual live stock. Only renders when `0 < qty <= 10` — never shows a number that isn't the real count, and threshold is easy to change in the snippet if 10 isn't right. Wired in via a new `low_stock_r20` custom-liquid block, positioned right after the size selector.
+
+Pushed `templates/product.json`, `assets/possessionless-white-sections-fix.css`, and the new `snippets/product-low-stock.liquid`, verified all three live, theme role still `UNPUBLISHED`.
+
+**Not visually verified** — same limitation as every round. The low-stock threshold (10) is a default, not a number you gave me — flag if you want it different.
