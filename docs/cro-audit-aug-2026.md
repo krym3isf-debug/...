@@ -433,3 +433,17 @@ Three requests in one message:
 Pushed all files (`snippets/product-low-stock.liquid`, `blocks/buy-buttons.liquid`, `templates/product.json`, `locales/en.default.json`), verified by reading each back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
 
 **Not visually verified by me** — same network limitation as every round.
+
+## Round 30 — cart drawer logo swap, tax/shipping line removed, header lettering pure white
+
+Three requests, all found by reading real theme source (`sections/header-group.json` didn't have the cart drawer — traced it to a hardcoded block in `snippets/header-actions.liquid`, confirmed via a full theme file listing rather than guessing filenames):
+
+1. **"CART" text replaced with the store logo, centered — same visual pattern as the "FREE MYSTERY ITEM" app popup you referenced (centered mark, close X pinned to the corner).** The cart drawer heading is hardcoded directly in `snippets/header-actions.liquid` (not a themeable block), with `{{ 'content.cart_title' | t }}` rendering "Cart" next to the item-count bubble. Replaced the visible text with the store's uploaded logo image (`settings.logo`, the same sigil used in the header), kept "Cart" as a screen-reader-only label for accessibility (the dialog's `aria-labelledby` points at this same heading, so the element and its id had to stay). Centered the logo independently of the close button using absolute positioning on the heading (`left: 50%; transform: translate(-50%, -50%)`) rather than flex `justify-content`, so the close button keeps its normal position in the corner regardless of the logo's width — applied to both the populated-cart header and the empty-cart header for consistency. The item-count bubble stays next to the logo since only the text label was asked to go.
+
+2. **"Taxes and shipping calculated at checkout." removed from the cart drawer summary.** That line was a plain `{% render 'tax-info' %}` call inside `snippets/cart-summary.liquid` (not a static block, no trap here) — deleted the wrapping div outright.
+
+3. **Header lettering forced to pure white.** The topbar override block in `assets/possessionless-white-sections-fix.css` had `--color-foreground: #e0e0e0` (light grey) for the header/announcement bar — changed to `#ffffff`, plus added explicit `color: #ffffff !important` on header links/buttons and the localization selector directly, since some of that text reads its color through a chain that wasn't fully resolving from the CSS variable alone.
+
+Pushed `snippets/header-actions.liquid`, `snippets/cart-summary.liquid`, `assets/possessionless-white-sections-fix.css` — verified all three by reading them back, matches exactly. Theme role reconfirmed `UNPUBLISHED`.
+
+**Not visually verified by me** — same network limitation as every round, and the cart-drawer centering specifically follows the same absolute-positioning pattern that's already worked twice this session (delivery box, zoom dialog), but is worth a direct look given how many centering misses happened before landing on that pattern.
