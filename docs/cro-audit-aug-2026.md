@@ -407,3 +407,15 @@ Round 26 went too far the other way: 30px squares read as too small, and the gap
 Pushed, verified by reading the file back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
 
 **Not visually verified by me** — same network limitation as every round.
+
+## Round 28 — real cause of the loose size-box spacing: it's a CSS grid, not flex
+
+You called the sizes "PERFECT" but flagged them as too spread out, and asked for the letters centered inside each box.
+
+**Root cause, found by reading the theme's own `assets/base.css`** (not guessed): `.variant-option--equal-width-buttons` — the exact fieldset class this theme applies to the size selector — is `display: grid; grid-template-columns: repeat(auto-fit, minmax(var(--variant-min-width), 1fr));`. The `1fr` is the key part: every column stretches to fill an equal share of the row's full width, so each 38px box was sitting inside a much wider grid cell — that's the large gap you saw, and it explains why Round 27's `gap: 6px` had no visible effect: `gap` sets the space *between* grid tracks, but the tracks themselves were already wide from the `1fr` sizing, so shrinking gap didn't shrink the visual distance between boxes.
+
+**Fix:** overrode that fieldset to plain `display: flex` with `flex-wrap: wrap` and `gap: 6px` — flex items size to their own content/explicit width (38px, set in Round 27) instead of stretching to fill a fractional grid column, so the boxes now actually sit next to each other. Also added explicit `display: flex; align-items: center; justify-content: center` on each button label plus `text-align: center` on its text span, to guarantee the size letters are centered within their box regardless of layout mode.
+
+Pushed `assets/possessionless-white-sections-fix.css`, verified by reading the file back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
+
+**Not visually verified by me** — same network limitation as every round.
