@@ -447,3 +447,23 @@ Three requests, all found by reading real theme source (`sections/header-group.j
 Pushed `snippets/header-actions.liquid`, `snippets/cart-summary.liquid`, `assets/possessionless-white-sections-fix.css` — verified all three by reading them back, matches exactly. Theme role reconfirmed `UNPUBLISHED`.
 
 **Not visually verified by me** — same network limitation as every round, and the cart-drawer centering specifically follows the same absolute-positioning pattern that's already worked twice this session (delivery box, zoom dialog), but is worth a direct look given how many centering misses happened before landing on that pattern.
+
+## Round 31 — logo bigger, item count removed, quantity/remove buttons cleaned up, express checkout buttons swapped for a plain payment-icon row
+
+Five requests from one screenshot pair (the cart drawer, plus a reference row of small payment-method icons):
+
+1. **Logo bigger, still centered.** `snippets/header-actions.liquid`: `.cart-drawer__logo-image` height `28px` → `44px`. The absolute-positioning centering from Round 30 doesn't care about the logo's size, so this was a pure size change.
+
+2. **Item-count bubble removed from next to the logo.** Dropped the `{% render 'cart-bubble' %}` call from the drawer heading — just the logo mark now, no number badge. (The header nav's own cart icon still shows its count separately; only this one instance next to the drawer logo was asked to go.)
+
+3. **Quantity stepper and remove button cleaned up — real cause, not just cosmetic tweaking.** Both `<button>`s carry the base theme's `button` class (for consistent touch-target sizing), which also pulls in the theme's solid-black primary-button treatment meant for real CTAs like Add to Cart — that's why `-`/`+`/trash rendered as heavy black squares instead of small inline icon controls. Added scoped overrides in `snippets/cart-products.liquid` stripping that back to a minimal bordered/transparent look: the quantity selector is now one thin-bordered pill (no fill), `-`/`+` are plain icon buttons with a light hover tint, and the remove button matches with the same thin border instead of a solid block.
+
+4. **Shop Pay / PayPal / Google Pay express-checkout buttons hidden.** These are controlled by the theme setting `show_accelerated_checkout_buttons` (`config/settings_data.json`) — separate from the store-level "dynamic checkout buttons" Payments toggle flagged as out-of-scope back in Round 10 (that one only affects the product page's Buy-with-Shop button and can't be controlled from the theme). This cart-drawer/cart-page toggle *is* theme-scoped, so setting it to `false` here doesn't touch anything live-site-wide. Set to `false`.
+
+5. **Clean payment-method icon row added in their place**, matching the reference screenshot's style. `snippets/cart-summary.liquid`: added a small `<ul>` of real, live payment-type icons via `shop.enabled_payment_types | payment_type_svg_tag` — the same mechanism the theme's own (currently footer-only) `payment-icons` block uses — so it only ever shows methods actually enabled on the store, not a static image. Sized small (20px), centered, wrapped in a simple flex row under the checkout button.
+
+Pushed `snippets/header-actions.liquid`, `snippets/cart-products.liquid`, `config/settings_data.json`, `snippets/cart-summary.liquid` — verified all four by reading them back, matches exactly. Theme role reconfirmed `UNPUBLISHED`.
+
+**On the missing item title you flagged:** read `snippets/cart-products.liquid` directly — the product-title link (`<a class="cart-items__title">{{ item.product.title }}</a>`) is present in the markup with normal, visible styling (`color: var(--color-foreground)`, no hidden/zero-size rules), and nothing in this session's own CSS touches that class. Nothing in the source explains it being missing, so this may have been a scroll/crop artifact in the screenshot rather than a real bug — didn't touch this code blindly a second time without evidence. Flag it again with a fresh screenshot if it's still missing after these changes and I'll dig further.
+
+**Not visually verified by me** — same network limitation as every round.
