@@ -361,3 +361,15 @@ Two small fixes to `snippets/product-delivery-estimate.liquid`:
 Pushed, verified by reading the file back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
 
 **Not visually verified** — same limitation as every round.
+
+## Round 24 — delivery box centering actually fixed (icon in the flex row was skewing it)
+
+You sent a screenshot: still not centered after Round 23.
+
+**Root cause:** `justify-content: center` on the box's flex row was centering the *icon-plus-text as one combined unit*, not the text alone — with the icon sitting to the left of the text inside that unit, the visual center of the text ends up off from the true center of the box, and depending on icon width/gap that reads as a noticeable left-heavy shift, not a subtle one. Setting `text-align: center` on the text itself (Round 23) was centering each line *within its own box*, but that inner box's position was still being set by the icon-skewed flex centering, so it didn't fix the underlying shift.
+
+**Fix:** took the icon out of the flex flow entirely — it's now `position: absolute; left: 20px` pinned to the left edge of the box — so the text column is free to span the box's full width and center independently of the icon, instead of competing with it for flex space. Text is now centered against the true center of the box, not the center of an icon+text pair.
+
+Pushed `snippets/product-delivery-estimate.liquid`, verified by reading the file back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
+
+**Not visually verified** — same limitation as every round, and centering specifically has now taken multiple attempts across this session (delivery box in Round 20, zoom dialog in Round 22, this box's text in Round 23-24) — worth a hard screenshot check on your end before considering it settled.
