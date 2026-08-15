@@ -221,3 +221,16 @@ Manually traced the corrected logic by hand against today's real date before pus
 **Lesson for future rounds:** "preserved verbatim because it looked like real computed logic" is not the same as "verified correct." Should have hand-traced this the first time it was touched in Round 10 instead of trusting that surviving three rounds of copy/paste meant it worked.
 
 **Not visually verified** — same limitation as every round, but this one is worth double-checking the actual displayed date against today's real date before moving on.
+
+## Round 14 — delivery box polish (purple CTA, bolder dates, 24-hour ships line)
+
+Quick styling pass on top of the Round 13 bugfix:
+
+1. **"ORDER NOW" changed from red to purple** (`#7c3aed`) — reads cleaner against the brand's dark/editorial palette than the red, which skewed more generic-ecommerce-alert.
+2. **Dates now visually pop.** Split "Estimated delivery:" (label, regular weight) from the date range into its own `.poss-delivery-estimate__date` class — bumped to `1rem`/`700` weight/`--color-foreground-heading`, versus the label at `0.85rem`/`400`/`--color-foreground`. Before, both were the same size and only the `<strong>` tag did the work; now there's real size + color contrast so the actual dates are what the eye lands on.
+3. **"Ships within 48 hours" → "Ships within 24 hours."**
+4. Confirmed the 3–4 business day window (`min_days`/`max_days`) was already correct from Round 13 — no change needed there, just flagging that it was checked rather than assumed.
+
+Pushed to `snippets/product-delivery-estimate.liquid`, verified live, theme role still `UNPUBLISHED`.
+
+**Not visually verified** — same limitation as every round.
