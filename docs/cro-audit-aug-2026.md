@@ -173,3 +173,21 @@ Both files pushed to the dev theme (`gid://shopify/OnlineStoreTheme/142389837887
 **Also surfaced by your annotated screenshot, not yet acted on:** the markup shows duplicate shipping/checkout messaging *inside the product description itself* ("SHIPPING: SAME-DAY DISPATCH ON ORDERS BEFORE 3PM" / "CHECKOUT: SECURE, ENCRYPTED CHECKOUT" as bullet-style lines above the size selector) — a third location beyond the two already addressed this round. There also appear to be cross-outs over the Returns & Exchanges and Fit & Sizing accordion rows. Content-level product description edits and removing accordion sections are decisions, not obvious theme fixes — asked you to confirm scope before touching either.
 
 **Not visually verified** — same session limitation as every round (no browser access).
+
+## Round 11 — delivery box copy matched to your reference, redundant shipping bullets removed from descriptions
+
+Follow-up to Round 10, based on a reference screenshot of another streetwear product page (different brand — the coincidental date match to ours was just two independent 5–8-business-day calculations landing near the same real-world date, not the same site).
+
+1. **Delivery box copy now matches your reference exactly.** Restored "Ships within 48 hours. **ORDER NOW** to receive by this date." (red accent, `#c0392b`, on "ORDER NOW"), replacing the plainer "Same-day dispatch..." line from Round 10. Worth being explicit about this reversal: Round 10 deliberately removed this exact phrasing as manufactured-urgency risk. You've now asked for it twice, specifically, referencing a real page that uses it the same way — tied to genuinely computed dates, not fake countdowns or fabricated stock claims — so this is your call, not a default I'm re-applying. Pushed to `snippets/product-delivery-estimate.liquid` on the dev theme, verified live.
+
+2. **Removed the duplicate SHIPPING/CHECKOUT bullets from all 4 product descriptions** (the thing your annotated screenshot was flagging) — matching your reference's minimal Fabric/Fit/Graphics-only format. This was a live catalog edit (`productUpdate` on `descriptionHtml`, same category as Round 9's variant work — takes effect immediately, not theme-scoped):
+   - 'Nocturne' Sigil Sweatpants
+   - 'Nocturne' Baggy Denim Jeans
+   - 'Nocturne' Sigil Sweatshirt
+   - 'Nocturne' Fur Zip-Up Hoodie
+
+   Each description is now just the `<strong>Fabric:</strong> / <strong>Fit:</strong> / <strong>Graphics:</strong>` three-liner — the "SHIPPING: Same-day dispatch..." / "CHECKOUT: Secure, encrypted checkout" paragraph that used to follow it is gone, since that's now covered by the delivery-estimate box and the "FREE SHIPPING · SECURE CHECKOUT" line below Add to Cart. No more triple-repeated shipping messaging on the page.
+
+**Not done (deliberately out of scope this round):** the reference page's "Find My Size" button, the "Jamal is 6'0 130lbs wearing size MEDIUM" fit-comparison line, and the "LOW STOCK · SALE ENDS SOON" badge — you said layout-only for those, not copy, and didn't ask for them to be built. The low-stock/sale-ending badge in particular would need real inventory/sale-end data behind it before it's worth revisiting — flagging that as the one piece from that reference that's genuine fake-urgency risk if ever added without real numbers.
+
+**Not visually verified** — same session limitation as every round.
