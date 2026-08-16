@@ -589,3 +589,15 @@ All of that is rendered by a single "filters" block (`blocks/filters.liquid`) wi
 Pushed `templates/collection.json`, verified by reading it back — `enable_filtering`, `enable_sorting`, `enable_grid_density` all confirmed `false`. Theme role reconfirmed `UNPUBLISHED`, so this is dev-theme only, not live.
 
 **Not visually verified by me** — same network limitation as every round.
+
+## Round 42 — "Policies" nav dropdown was floating off to the side instead of under its own trigger
+
+You sent a screenshot from the Shipping Policy page showing the "Policies" dropdown (Contact/FAQ/Shipping Policy/etc.) rendering as a small box off to the right of the "POLICIES" nav item, overlapping the page's own heading — not aligned under its trigger at all.
+
+Root cause, found in `blocks/_header-menu.liquid`'s mega-menu CSS: each dropdown (`.menu-list__submenu`) is positioned `position: absolute; left: 0; width: 100%;`, relying on its own parent `<li>` (`.menu-list__list-item`) to be the positioned containing block it's measured against. That parent was never given `position: relative` anywhere in the theme, so the browser fell back to a further-away ancestor as the containing block — the dropdown's `left: 0` pointed at that ancestor's edge, not the trigger's, landing it off to the side. "Policies" is the only top-level nav item with real children, so it's targeted directly (`:has(> .menu-list__submenu)`) rather than guessing at position in the list.
+
+Fixed in `assets/possessionless-white-sections-fix.css` (new section 8): gave the parent `<li>` `position: relative`, so the dropdown now measures from its own trigger; changed the dropdown from the mega-menu's default full-width span (meant for large multi-column menus) to `width: max-content` with a 220px minimum, since a plain 6-link list doesn't need to span the header; and collapsed its internal grid to a single column so the links stack cleanly instead of trying to lay out as a multi-column mega-menu.
+
+Pushed `assets/possessionless-white-sections-fix.css`, verified by reading it back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
+
+**Not visually verified by me** — same network limitation as every round.
