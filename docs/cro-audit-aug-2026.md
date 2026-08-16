@@ -579,3 +579,13 @@ You reported the "Policies" nav item 404ing both on hover-then-click and on a di
 2. **FAQ page heading consistency.** Checked the actual FAQ page content first — it's already thorough and accurate (shipping time, returns/exchanges, damaged/wrong items, tracking, address changes, international shipping, lost packages, contact fallback), and matches the Shipping Policy/Refund Policy pages' facts exactly. One heading broke the Q&A pattern every other section follows: "Shipping Time" wasn't phrased as a question. Changed it to "How long does shipping take?" to match the other seven headings. No other content changed.
 
 Pushed via `menuUpdate` and `pageUpdate` (Admin API resources, not theme files) — both re-verified by reading back after the mutation. Since these are live-store changes, **they're visible on the actual site right now**, not just the dev-theme preview.
+
+## Round 41 — collection page toolbar removed (Availability/Price filters, item count, Sort, grid density toggle)
+
+You wanted the entire toolbar row on `/collections/all` gone — the Availability/Price filter dropdowns, the "4 ITEMS" count, the Sort dropdown, and the grid/list density icons on the right.
+
+All of that is rendered by a single "filters" block (`blocks/filters.liquid`) with three independent toggles — `enable_filtering`, `enable_sorting`, `enable_grid_density` — configured per-instance in `templates/collection.json`. The whole block is wrapped in one guard: `{% if enable_filtering or enable_sorting or enable_grid_density %}` — when all three are false it renders nothing (an empty `<div></div>`). Set all three to `false` in the block's settings rather than hiding the row with CSS, so the underlying facets/sorting/grid-density markup and its JS don't render or ship to the page at all.
+
+Pushed `templates/collection.json`, verified by reading it back — `enable_filtering`, `enable_sorting`, `enable_grid_density` all confirmed `false`. Theme role reconfirmed `UNPUBLISHED`, so this is dev-theme only, not live.
+
+**Not visually verified by me** — same network limitation as every round.
