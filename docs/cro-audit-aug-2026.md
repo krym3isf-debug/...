@@ -601,3 +601,13 @@ Fixed in `assets/possessionless-white-sections-fix.css` (new section 8): gave th
 Pushed `assets/possessionless-white-sections-fix.css`, verified by reading it back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
 
 **Not visually verified by me** — same network limitation as every round.
+
+## Round 43 — "Policies" nav dropdown: connect it to the header and match the site's dark chrome
+
+Round 42's alignment fix worked, but you sent a follow-up screenshot: the dropdown now sits under "Policies" correctly, but as a near-pure-black floating card with a heavy drop shadow, hanging a visible gap below the header bar — reading as a separate, disconnected popover rather than part of the site.
+
+Two things stacked: (1) once the dropdown was anchored to its own trigger in Round 42, the theme's default `top` value — a `calc()` that measures against custom properties (`--full-open-header-height`, `--submenu-height`) tuned for the *old*, further-away containing block — no longer lined up, leaving that gap; replaced it with a plain `top: 100%` so it sits flush against the header with no leftover calc dependency. (2) The dropdown's background/border/shadow were coming from the theme's default popover styling, not this site's dark charcoal — overrode background to the same `#0a0a0a` used everywhere else in the header/footer (sections 2–3), stripped the box-shadow and border-radius, and set link color to white so it reads as one continuous piece of the header instead of a separate card.
+
+Pushed `assets/possessionless-white-sections-fix.css`, verified by reading it back — matches exactly, `top: 100%` and `#0a0a0a` background confirmed. Theme role reconfirmed `UNPUBLISHED`.
+
+**Not visually verified by me** — same network limitation as every round.
