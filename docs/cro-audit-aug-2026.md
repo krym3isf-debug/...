@@ -611,3 +611,13 @@ Two things stacked: (1) once the dropdown was anchored to its own trigger in Rou
 Pushed `assets/possessionless-white-sections-fix.css`, verified by reading it back — matches exactly, `top: 100%` and `#0a0a0a` background confirmed. Theme role reconfirmed `UNPUBLISHED`.
 
 **Not visually verified by me** — same network limitation as every round.
+
+## Round 44 — footer "Shop" column removed, "Customer Support" only
+
+You wanted the footer's "SHOP" accordion column gone, leaving just "Customer Support."
+
+`sections/footer-group.json` lists the footer's blocks in an explicit `block_order`: brand blurb → divider → **Shop menu** → divider → Support menu → divider → email signup. Removed the `shop_menu_pl001` block and the divider immediately after it (`divider_2_pl001`) rather than just one or the other, so the remaining sequence still alternates cleanly (brand → divider → Support → divider → signup) instead of leaving two adjacent dividers with nothing between them.
+
+Pushed `sections/footer-group.json`, verified by reading it back — Shop menu block and its divider both gone, block order now `brand_group_pl001, divider_1_pl001, support_menu_pl001, divider_3_pl001, signup_group_pl001`. Theme role reconfirmed `UNPUBLISHED`.
+
+**Not visually verified by me** — same network limitation as every round.
