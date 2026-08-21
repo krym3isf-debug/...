@@ -677,3 +677,15 @@ Rather than tracking down every section/template on the site that renders a prod
 Pushed `assets/possessionless-white-sections-fix.css`, verified by reading it back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
 
 **Not visually verified by me** — same network limitation as every round.
+
+## Round 50 — Round 49's fix broke the product images on that same row
+
+You sent a follow-up screenshot of the same "New Release" row: title and price text now visible, but every product photo had disappeared entirely.
+
+Round 49's selector, `.product-card .layout-panel-flex--column`, was too broad — it also matched the OUTER product-card wrapper (`.product-card__content`, from `snippets/product-card.liquid`), not just the nested "group" block that actually holds the title/price. That outer wrapper's default `align-items` value is what makes the gallery image stretch to fill the card's width; forcing it to `center` instead let the image collapse down to nothing, since nothing else was giving it an explicit width once it stopped stretching. That's what broke the photos in this screenshot.
+
+Narrowed the selector to the nested group specifically — `.group-block-content` (the class `snippets/group.liquid` gives its own flex wrapper, distinct from the outer wrapper's `.product-card__content`) — so only the title/price wrapper's alignment changes now, and the gallery keeps its full-width stretch untouched.
+
+Pushed `assets/possessionless-white-sections-fix.css`, verified by reading it back — matches exactly, selector now scoped to `.group-block-content` only. Theme role reconfirmed `UNPUBLISHED`.
+
+**Not visually verified by me** — same network limitation as every round. Given this round is specifically fixing a regression I couldn't see, flag if the images are still missing after this.
