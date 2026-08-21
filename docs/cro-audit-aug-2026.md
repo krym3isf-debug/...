@@ -621,3 +621,13 @@ You wanted the footer's "SHOP" accordion column gone, leaving just "Customer Sup
 Pushed `sections/footer-group.json`, verified by reading it back — Shop menu block and its divider both gone, block order now `brand_group_pl001, divider_1_pl001, support_menu_pl001, divider_3_pl001, signup_group_pl001`. Theme role reconfirmed `UNPUBLISHED`.
 
 **Not visually verified by me** — same network limitation as every round.
+
+## Round 45 — FAQ page was showing blank on the LIVE site: white-on-white, not missing content
+
+You sent a screenshot of `possessionless.store/pages/faq` (the actual live site, not the dev preview) — just the "FAQ" heading, nothing below it. Checked the actual Page resource via the Admin API rather than assuming the content was gone: the body HTML from Round 40 was still fully intact, correct, and unchanged.
+
+The real cause: this content was written with hardcoded white text (`rgba(255,255,255,...)`) and light borders, styled for a dark section background. But `templates/page.json` on the **live** theme ("Copy of Vessel" — a different, published theme from the dev CRO test theme this whole log has been about) renders the page-content block in `scheme-7`, which is a light/white background scheme on this theme — the same white background visible in your screenshot around the "FAQ" heading. White text on a white background reads as nothing, even though the text is genuinely there in the page source — the same failure mode as the invisible cart-drawer text from much earlier in this project (Round 32), just showing up on a different page and a different (live, not dev) theme this time.
+
+Fixed by inverting every hardcoded color in the FAQ body from white/light (`rgba(255,255,255,...)`) to dark (`rgba(0,0,0,...)`) — same structure, same eight Q&A sections, same wording, just visible against the actual background it renders into. Pushed via `pageUpdate`, verified by reading the page back.
+
+**This is a live-store content change** (Pages aren't theme-scoped, same as Round 40) — it's visible on the actual site right now, not the dev-theme preview. Not visually verified by me beyond confirming the color values changed in the saved body — this session has no browser access to load the live page and see it rendered.
