@@ -665,3 +665,15 @@ You asked for it a bit bigger still, but not drastically. Bumped `font_size` on 
 Pushed both files, verified by reading them back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
 
 **Not visually verified by me** — same network limitation as every round.
+
+## Round 49 — product title/price centered under the image on a non-collection-page product row
+
+You sent a screenshot of four product cards (Sigil Sweatpants, Fur ZipUp Hoodie, Sigil Sweatshirt, Baggy Denim Jeans) where the images looked centered but the title and price text sat flush left, not lined up with the image above it.
+
+Traced it to the product card's nested "group" block (`snippets/group.liquid`, the wrapper around title/price/swatches) — its horizontal-alignment setting defaults to `flex-start` (left) in the block's own schema unless a specific section instance explicitly sets it to `center`. The `/collections/all` page's product-card config (`templates/collection.json`, set back in earlier rounds) already had that override, which is why that page's cards look right — but whichever section renders this particular row of four didn't have it, so it fell back to the schema default and read as left-aligned under an otherwise-centered image.
+
+Rather than tracking down every section/template on the site that renders a product card and setting this per-instance, added one CSS rule scoped under `.product-card` in `assets/possessionless-white-sections-fix.css` (new section 10) that forces `align-items: center` — fixes it everywhere at once instead of just the one section in this screenshot. Price needed an additional explicit `text-align: center`, since its box is full-width by schema default (unlike the title's fit-content box), so centering the box alone wasn't enough to move text that was still left-aligned inside it.
+
+Pushed `assets/possessionless-white-sections-fix.css`, verified by reading it back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
+
+**Not visually verified by me** — same network limitation as every round.
