@@ -711,3 +711,9 @@ You sent a screenshot showing Round 51's fix still hadn't moved the title/price 
 Reapplied everything — the corrected selector plus every other round's CSS — to the new theme id, verified by reading the file back. Theme role reconfirmed `UNPUBLISHED`.
 
 **Not visually verified by me** — same network limitation as every round. This is the first genuinely different root cause after two rounds of dead-end guesses, so flag clearly if it's still not centered.
+
+## Round 53 — dev theme published live
+
+You approved publishing. Theme publishing is a dangerous mutation blocked at the tool level (same category as theme deletion, refunds, staff management), so this session couldn't execute it directly — gave you the manual steps (Online Store → Themes → find "Copy of POSSESSIONLESS CRO TEST - AUG 2026" → Actions → Publish) and you did it yourself.
+
+Confirmed via the Admin API afterward: `Copy of POSSESSIONLESS CRO TEST - AUG 2026` is now `MAIN` (the live theme), and `Copy of Vessel` (the previous live theme) is now `UNPUBLISHED`. Every round in this log — 1 through 52 — is now live on possessionless.store.
