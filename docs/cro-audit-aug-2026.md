@@ -631,3 +631,15 @@ The real cause: this content was written with hardcoded white text (`rgba(255,25
 Fixed by inverting every hardcoded color in the FAQ body from white/light (`rgba(255,255,255,...)`) to dark (`rgba(0,0,0,...)`) — same structure, same eight Q&A sections, same wording, just visible against the actual background it renders into. Pushed via `pageUpdate`, verified by reading the page back.
 
 **This is a live-store content change** (Pages aren't theme-scoped, same as Round 40) — it's visible on the actual site right now, not the dev-theme preview. Not visually verified by me beyond confirming the color values changed in the saved body — this session has no browser access to load the live page and see it rendered.
+
+## Round 46 — announcement bar: dropped the @handle, made "FREE SHIPPING" bigger, fixed it overflowing at mid-size widths
+
+You wanted the `@possessionless.us` handle gone from the announcement bar and "FREE SHIPPING ON ALL ORDERS" bigger. A follow-up screenshot at a ~900px-wide window showed the right-side text had already dropped off-screen — asked to make that fit too.
+
+1. **Handle removed, right side enlarged.** `sections/header-group.json`'s first announcement slide (`announcement_pair1`) pairs a left `text` ("@possessionless.us") with a `right_text` ("FREE SHIPPING ON ALL ORDERS") in one block, sharing a single `font_size` setting. Cleared `text` to empty — the split layout's `justify-content: space-between` still holds the right text flush right with nothing on the left — and bumped `font_size` from `1.5rem` to `1.75rem`. The second slide ("Nothing Owns You" / "Shop the Nocturne Collection") wasn't touched.
+
+2. **Fixing the overflow was a separate problem from making it bigger.** Checked `snippets/typography-style.liquid`: the block's `font_size` only gets the theme's automatic fluid/shrinking treatment above a 3rem cutoff — anything below that (including both the old 1.5rem and the new 1.75rem) renders as a flat, non-responsive size that never shrinks on its own. That's true independent of Round 46's size bump — the screenshot showing the text missing at ~900px means this bar was already at risk of overflowing on real devices before today's change, just made more likely to be noticeable now that it's bigger. Added explicit breakpoints in `assets/possessionless-white-sections-fix.css` (new section 9), matching the theme's existing 989px/749px breakpoints used elsewhere in this file: font-size steps down to 0.85rem under 989px and 0.65rem under 749px, with letter-spacing reset to normal at the smallest step (loose tracking costs real width per character, and that's exactly what's scarce on a narrow bar).
+
+Pushed `sections/header-group.json` and `assets/possessionless-white-sections-fix.css`, verified both by reading them back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
+
+**Not visually verified by me** — same network limitation as every round.
