@@ -689,3 +689,13 @@ Narrowed the selector to the nested group specifically — `.group-block-content
 Pushed `assets/possessionless-white-sections-fix.css`, verified by reading it back — matches exactly, selector now scoped to `.group-block-content` only. Theme role reconfirmed `UNPUBLISHED`.
 
 **Not visually verified by me** — same network limitation as every round. Given this round is specifically fixing a regression I couldn't see, flag if the images are still missing after this.
+
+## Round 51 — product title/price still not centered; switched to align-self so it can't break anything else
+
+Good news from your screenshot: the images were back (Round 50's fix worked). But the title/price text was still flush left, not centered — meaning Round 50's `.group-block-content` selector didn't match anything on this particular row at all. Most likely explanation: this section doesn't nest title/price inside the "group" block the way `templates/collection.json`'s card does — they're probably direct children of the outer `.product-card__content` wrapper here instead, so a selector scoped to the nested group block had nothing to grab onto.
+
+Rather than going a third round of guessing at this section's exact nesting structure, switched approach entirely: `align-self: center` on the title (`.text-block[role='heading']`) and price (`product-price`) elements themselves, instead of `align-items` on whatever their container happens to be. `align-self` overrides the parent's alignment for just that one flex item — it can't touch siblings, so it's structurally incapable of repeating Round 49's regression (breaking the gallery) no matter how a given section nests its blocks. This should center the text correctly regardless of whether title/price sit inside a group or directly in the outer wrapper. Kept the Round 50 `.group-block-content` rule in place too, since it's harmless where that nesting does exist (like the collection page).
+
+Pushed `assets/possessionless-white-sections-fix.css`, verified by reading it back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
+
+**Not visually verified by me** — same network limitation as every round.
