@@ -699,3 +699,15 @@ Rather than going a third round of guessing at this section's exact nesting stru
 Pushed `assets/possessionless-white-sections-fix.css`, verified by reading it back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
 
 **Not visually verified by me** — same network limitation as every round.
+
+## Round 52 — real bug found (`[role='heading']` selector never matched anything) + the dev theme's ID changed underneath this project
+
+You sent a screenshot showing Round 51's fix still hadn't moved the title/price text at all. Two things came out of investigating this:
+
+**1. The theme this whole log has been built on no longer exists.** Querying the theme list, `POSSESSIONLESS CRO TEST - AUG 2026` (`gid://shopify/OnlineStoreTheme/142389837887`) — the id every push in Rounds 1–51 targeted — is gone. In its place: `Copy of POSSESSIONLESS CRO TEST - AUG 2026` (`gid://shopify/OnlineStoreTheme/142562066495`), still unpublished. This wasn't anything done from this session — duplicating/deleting a theme isn't something these tools do — so it must have happened directly in the Shopify admin theme picker. Checked the copy's content: it has everything through **Round 50**, but not Round 51 — meaning the duplication happened after Round 50's push landed but before Round 51's did, and Round 51 went to a theme id that was deleted shortly after. **All pushes from this round forward target the new id; the dev preview link at the bottom of this reply now points to it.**
+
+**2. The actual reason centering never worked, across three rounds of guessing.** Read `snippets/text.liquid` directly instead of guessing at the DOM again: the product title's real flex item is the outer `.text-block` div. `role="heading"` is NOT on that div — it's on an inner `<p role="heading">` one level down, from `blocks/product-title.liquid`'s own markup. Round 51's selector, `.text-block[role='heading']` with no space between them, requires both the class and the attribute on the *same* element — which never exists on this theme, on any section. That's why `align-self: center` was being applied to zero elements the whole time, on every section, not just this "New Release" row. Retargeted to `.text-block` alone, confirmed against the snippet as the actual flex item (its wrapping `<a>` uses `class="contents"`, which drops the anchor out of the box model entirely, so `.text-block` sits directly as the flex child).
+
+Reapplied everything — the corrected selector plus every other round's CSS — to the new theme id, verified by reading the file back. Theme role reconfirmed `UNPUBLISHED`.
+
+**Not visually verified by me** — same network limitation as every round. This is the first genuinely different root cause after two rounds of dead-end guesses, so flag clearly if it's still not centered.
