@@ -643,3 +643,17 @@ You wanted the `@possessionless.us` handle gone from the announcement bar and "F
 Pushed `sections/header-group.json` and `assets/possessionless-white-sections-fix.css`, verified both by reading them back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
 
 **Not visually verified by me** — same network limitation as every round.
+
+## Round 47 — announcement bar simplified to a single centered "Free Shipping" message
+
+You wanted the second slide ("Nothing Owns You" / "Shop the Nocturne Collection") gone entirely and "Free Shipping" centered and bigger instead of split/right-aligned.
+
+`sections/header-group.json`: removed `announcement_pair2` from both `blocks` and `block_order`, leaving only one block. Moved "FREE SHIPPING ON ALL ORDERS" from the block's `right_text` field into `text` and cleared `right_text` — the block's own Liquid (`blocks/_announcement.liquid`) branches on whether `right_text` is present: with it empty, the block renders its single-text path (`<p class="announcement-bar__text">`), which is centered by classes already applied to every announcement slide, instead of the split left/right layout. Also cleared the now-orphaned Instagram `link` that was attached to the old handle text, and bumped `font_size` from `1.75rem` to `2.5rem`.
+
+With only one block left, `sections/header-announcements.liquid`'s own logic (`autoplay`/arrows only activate when `section.blocks.size > 1`) automatically turns off the rotation and arrows — nothing extra needed there.
+
+Updated the Round 46 responsive-fit CSS (section 9) to match: the split-only `--left`/`--right` selectors no longer match anything now that this is single centered text, so added the plain `.announcement-bar__text` class alongside them, and adjusted the breakpoint sizes for the new, bigger 2.5rem base (1.25rem under 989px, 0.85rem under 749px).
+
+Pushed `sections/header-group.json` and `assets/possessionless-white-sections-fix.css`, verified both by reading them back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
+
+**Not visually verified by me** — same network limitation as every round.
