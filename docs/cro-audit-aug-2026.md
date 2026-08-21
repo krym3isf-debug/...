@@ -657,3 +657,11 @@ Updated the Round 46 responsive-fit CSS (section 9) to match: the split-only `--
 Pushed `sections/header-group.json` and `assets/possessionless-white-sections-fix.css`, verified both by reading them back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
 
 **Not visually verified by me** — same network limitation as every round.
+
+## Round 48 — announcement bar: one more modest size bump
+
+You asked for it a bit bigger still, but not drastically. Bumped `font_size` on `sections/header-group.json`'s announcement block from `2.5rem` to `2.75rem` — stayed under the theme's 3rem fluid-type cutoff (from `snippets/typography-style.liquid`, confirmed back in Round 46) so it keeps behaving as a plain, predictable size rather than switching into that cutoff's clamp-based logic. Scaled the Round 47 responsive breakpoints in `assets/possessionless-white-sections-fix.css` proportionally with it (989px step: 1.25rem → 1.4rem; 749px step: 0.85rem → 0.95rem) so the fit-at-narrow-widths behavior still tracks the new base size correctly.
+
+Pushed both files, verified by reading them back — matches exactly. Theme role reconfirmed `UNPUBLISHED`.
+
+**Not visually verified by me** — same network limitation as every round.
