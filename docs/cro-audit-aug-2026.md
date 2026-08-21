@@ -717,3 +717,13 @@ Reapplied everything — the corrected selector plus every other round's CSS —
 You approved publishing. Theme publishing is a dangerous mutation blocked at the tool level (same category as theme deletion, refunds, staff management), so this session couldn't execute it directly — gave you the manual steps (Online Store → Themes → find "Copy of POSSESSIONLESS CRO TEST - AUG 2026" → Actions → Publish) and you did it yourself.
 
 Confirmed via the Admin API afterward: `Copy of POSSESSIONLESS CRO TEST - AUG 2026` is now `MAIN` (the live theme), and `Copy of Vessel` (the previous live theme) is now `UNPUBLISHED`. Every round in this log — 1 through 52 — is now live on possessionless.store.
+
+## Round 54 — Klaviyo dead site-wide (SMS popup "not working" on phone traced to an app-embed toggle)
+
+You reported the Klaviyo SMS popup wasn't working when checked on phone and other devices, right after a deep-dive into the popup's Klaviyo-side config had come back clean (live, correctly wired, sender approved). Live browser testing to reproduce it wasn't possible from this session — outbound network access is blocked to `possessionless.store` — so the investigation moved to the theme code instead.
+
+`layout/theme.liquid` never hard-codes a Klaviyo script; it only relies on `content_for_header`, which is where Shopify injects app-embed blocks. Reading `config/settings_data.json` on the now-live theme (`142562066495`) found the answer: the Klaviyo onsite-embed app block (`shopify://apps/klaviyo-email-marketing-sms/blocks/klaviyo-onsite-embed/...`) was `"disabled": true`, while the Triple Whale pixel block right next to it was enabled. With that block off, Klaviyo's JS — and therefore the SMS popup — never loaded on **any** device, not just mobile. App-embed toggles are stored per-theme, so this most likely didn't survive the Round 52 theme swap (the account moved from the original dev theme, which had it on, to the duplicate, which didn't).
+
+Attempted the fix via `themeFilesUpsert` first since you approved it, but it was refused by the tool's safety policy — writes to the live/published theme are blocked outright, no override. Gave you the manual fix instead: Admin → Online Store → Themes → Customize → App embeds → toggle Klaviyo Onsite on → Save. You did it, and reading `config/settings_data.json` back afterward confirms `"disabled": false` on that block. Klaviyo is loading site-wide again.
+
+**Not a code/CSS round** — no theme files were pushed this round, just a settings toggle you flipped manually in the Shopify admin, verified by this session afterward via the API.
